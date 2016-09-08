@@ -17,6 +17,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 *.one
+*.ms-one-stub
 
 # =========================
 # Operating System Files

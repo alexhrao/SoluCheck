@@ -1,0 +1,141 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="3627511443" file="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Development\SoluCheck.prj" location="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Development" name="SoluCheck" target="target.mlapps" target-name="Package App">
+    <param.appname>SoluCheck</param.appname>
+    <param.authnamewatermark>Alexander Rao</param.authnamewatermark>
+    <param.email>solucheck@gmail.com</param.email>
+    <param.company>SoluWorks</param.company>
+    <param.icon>${PROJECT_ROOT}\SoluCheck_resources\icon_24.png</param.icon>
+    <param.icons>
+      <file>${PROJECT_ROOT}\SoluCheck_resources\icon_48.png</file>
+      <file>${PROJECT_ROOT}\SoluCheck_resources\icon_24.png</file>
+      <file>${PROJECT_ROOT}\SoluCheck_resources\icon_16.png</file>
+    </param.icons>
+    <param.summary>MATLAB Code Testing Suite</param.summary>
+    <param.description>With SoluWorks' newest addition, &lt;i&gt;SoluCheck&lt;/i&gt;, it's now easier than ever to test and optimize your MATLAB code. After all, SoluCheck includes:
+&lt;ul&gt;
+&lt;li&gt;Basic Function Testing&lt;/li&gt;
+&lt;li&gt;Image Testing&lt;/li&gt;
+&lt;li&gt;File Comparison Testing&lt;/li&gt;
+&lt;li&gt;Batch Testing via an MS Excel Database&lt;/li&gt;
+&lt;li&gt;Detailed Output information&lt;/li&gt;
+&lt;/ul&gt;
+With it's newest upgrade, SoluCheck 2.0 is meaner and leaner than ever before. Quickly and easily test your code against solutions, then drill down to find out exactly where your answers differ from the solution's answers. Precisely specify an exact pattern of arguments for SoluCheck to use to test your code. Do all of this and so much more with SoluCheck, the one and only MATLAB Code Testing Suite you will ever need!</param.description>
+    <param.screenshot>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Branding\SoluCheckScreenshot.JPG</param.screenshot>
+    <param.version>2.1.0.0</param.version>
+    <param.products.name>
+      <item>MATLAB</item>
+    </param.products.name>
+    <param.products.id>
+      <item>1</item>
+    </param.products.id>
+    <param.products.version>
+      <item>9.0</item>
+    </param.products.version>
+    <param.platforms />
+    <param.output>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Development</param.output>
+    <param.guid>d19cdd9a-782c-4c8e-a715-f1d7393feaae</param.guid>
+    <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\SoluCheck.m</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\AdvancedOptions.fig</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\AdvancedOptions.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\anyMult.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\Arguments.fig</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\Arguments.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\cleanLines.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\codeAnalyzer.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\customWorkSpace__SystemFunction.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\Exempt.fig</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\Exempt.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\getArgs.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\listCreate.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\LoadDatabase.fig</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\LoadDatabase.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\LoadVariables.fig</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\LoadVariables.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\Notifications.fig</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\Notifications.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\Parameters.fig</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\Parameters.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\Range.fig</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\Range.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\readySubmit.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\SizeArray.fig</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\SizeArray.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\SoluCheck.fig</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\SoluCheckEngine.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\stcNumel.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\CoreFiles\strFound.m</file>
+    </fileset.depfun>
+    <fileset.resources>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Documentation\SoluCheckDocumentation.pdf</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Media\Error1.mp3</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Media\Error2.mp3</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Media\Error3.mp3</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Media\Fail1.mp3</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Media\Fail2.mp3</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Media\Fail3.mp3</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Media\Pass1.mp3</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Media\Pass2.mp3</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Media\Pass3.mp3</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Media\Pass4.mp3</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Media\Start.mp3</file>
+    </fileset.resources>
+    <fileset.package />
+    <build-deliverables>
+      <file location="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support" name="Development" optional="false">C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current Projects\SoluCheck\Support\Development</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2016a</root>
+      <toolboxes>
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabcoder" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="embeddedcoder" />
+      </toolboxes>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>6.2</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

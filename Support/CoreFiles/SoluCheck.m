@@ -8,12 +8,9 @@ function varargout = SoluCheck(varargin)
 %      contact SoluCheck Services at SoluCheck@gmail.com.
 %
 % See also: AdvancedOptions, SoluCheckEngine
-
-% Last Modified by GUIDE v2.5 27-Oct-2015 23:15:57
-
-% Begin initialization code - DO NOT EDIT
 if isempty(varargin)
     disp('Loading SoluCheck, Please Wait...');
+    addpath(cd());
     varargin{1} = true;
 end
 gui_Singleton = 1;
@@ -1612,7 +1609,6 @@ function uiBSoluCheck_CloseRequestFcn(hObject, eventdata, handles)
 
 % Hint: delete(hObject) closes the figure
 disp('Closing SoluCheck, Please Wait...');
-% should we get rid of any files that we used (ie, paths!?)
 
 % get the original directory:
 strOldDir = getappdata(findobj('Tag', 'uiBSoluCheck'), 'strOldDir');

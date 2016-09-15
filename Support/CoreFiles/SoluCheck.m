@@ -990,7 +990,7 @@ if ~strcmp(hObject.Enable, 'on')
         %set the correct pixel positions, and make it visible!
         uiWWorkSpace.Visible = 'on';
         uiWWorkSpace.WindowStyle = 'modal';
-        set(tbBArgument{intArgument}, 'Enable', 'off');
+        set(tbBArgument{intArgument}, 'Enable', 'inactive');
     end
 end
 
@@ -1062,7 +1062,8 @@ iNargin = getappdata(hSoluCheck, 'iNargin');
 stcSwitches = getappdata(hSoluCheck, 'stcSwitches');
 if hObject.Value == 8
     % if we have a formulaic entry (8), work accordingly (as shown above):
-    uiCCommandWindow = figure('Visible', 'on', 'Name', ['SoluCheck: Formulaic Entry #', strName(12:end)], 'NumberTitle', 'off', 'position', [350 50 500 550], 'Tag', 'uiCCommandWindow',...
+    uiCCommandWindow = figure('Visible', 'on', 'Name', ['SoluCheck: Formulaic Entry #', ...
+        strName(12:end)], 'NumberTitle', 'off', 'position', [350 50 500 550], 'Tag', 'uiCCommandWindow',...
         'WindowStyle', 'modal', 'CloseRequestFcn', {@pbCCancel_Callback, hObject.Tag}, 'MenuBar', 'none');
     tbCCommandLine = uicontrol('Style', 'edit',  'Tag', 'tbCCommandLine', 'position', [0, 50, 500, 500], 'HorizontalAlignment', 'left', ...
         'Max', 100, 'Min', 0, 'Units', 'Normalized', 'String', '>> ', 'KeyPressFcn', @tbCCommandLine_KeyPressFcn, 'FontSize', 10.0, 'ToolTip',...
@@ -1090,13 +1091,15 @@ elseif hObject.Value == 2
         strName(12:end)], 'NumberTitle', 'off', 'position', [350 50 500 450], 'Tag', 'uiWWorkSpace', ...
         'Units', 'Normalized', 'KeyPressFcn', {@uiWWorkSpace_KeyPressFcn, hObject.Tag}, ...
         'CloseRequestFcn', {@uiWWorkSpace_CloseRequestFcn, hObject.Tag}, 'WindowStyle', 'modal');
-    lbWVariables = uicontrol('Style', 'listbox', 'Tag', 'lbWVariables', 'String', cellVariables, 'FontSize', 10.0, 'KeyPressFcn', {@lbWVariables_KeyPressFcn, hObject.Tag});
+    lbWVariables = uicontrol('Style', 'listbox', 'Tag', 'lbWVariables', ...
+        'String', cellVariables, 'FontSize', 10.0, 'KeyPressFcn', ...
+        {@lbWVariables_KeyPressFcn, hObject.Tag});
     vecPosn = getpixelposition(uiWWorkSpace);
     vecPosn(1:2) = 0;
     setpixelposition(lbWVariables, vecPosn);
     uiWWorkSpace.Visible = 'on';
     uiWWorkSpace.WindowStyle = 'modal';
-    set(tbBArgument{intName}, 'Enable', 'on', 'String', '');
+    set(tbBArgument{intName}, 'Enable', 'inactive', 'String', '');
 else
     % Otherwise, just make sure the text box is enabled:
     set(tbBArgument{intName}, 'Enable', 'on');

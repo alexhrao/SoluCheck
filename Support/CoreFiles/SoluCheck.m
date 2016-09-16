@@ -65,7 +65,8 @@ if ~isappdata(hObject, 'stcSwitches')
                          'FileTesting', false, ...
                          'ImageTesting', false, ...
                          'VariableIn', false, ...
-                         'VariableOut', false);
+                         'VariableOut', false, ...
+                         'Auditing', false);
     % Create our audio structure:
     [arrSound1, arrBitRate1] = audioread('Start.mp3');
     [arrSound2, arrBitRate2] = audioread('Pass1.mp3');
@@ -738,7 +739,7 @@ if ~bError
     % Retrieve ALL of the outputs from SoluCheck Engine, using the
     % arguments we've created above. The Engine is literally called
     % SoluCheckEngine
-    [logPassed, strEngineError, intArgNumber, cellFinalArgs, cellAnswers, cellSolutions, vecCodeTime, vecSolnTime] = ...
+    [logPassed, strEngineError, intArgNumber, cellFinalArgs, cellAnswers, cellSolutions, vecCodeTime, vecSolnTime, fidAudit] = ...
         SoluCheckEngine(sFileName(1:end-2),sSolutionName(1:end-2), round(intIterations), cDataType, cArgs{:});
     % set the app data as public data:
     fprintf('SoluCheck has finished testing. Analyzing Results...\n');
@@ -810,6 +811,12 @@ if ~bError
     % open our profiler, if need be:
     if stcSwitches.Profiler
         profile('viewer');
+    end
+    % publish our file, if need be!
+    if fidAudit ~= -1
+        fclose(fidAudit);
+        fidAudit = publish([cd '\audit.m']);
+        web(fidAudit);
     end
 else
     % if we errored out DURING THE CONVERSION PROCESS (NOT IN THE ENGINE),

@@ -1,4 +1,4 @@
-function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSolutions, vecCodeTime, vecSolnTime] =...
+function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSolutions, vecCodeTime, vecSolnTime, fidAudit] =...
     SoluCheckEngine(strFName, strFSolnName, intIterations, cellDataType, varargin)
 % SOLUCHECKENGINE Core of SoluCheck Platform
 %
@@ -22,6 +22,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
 %               6. Cell array of the solutions.
 %               7. Vector with your code times.
 %               8. Vector with the solution code time.
+%               9. A FileID for the audit, if applicable.
 %
 %       To use the SoluCheck Engine, you'll need to have somewhat advanced
 %       knowledge of how MATLAB operates. It is recommended that you use the
@@ -127,6 +128,14 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
     
     if stcSwitches.PlotTesting
         vecPlotAverage = zeros(1, intIterations) - 1;
+    end
+    
+    if stcSwitches.Auditing
+        fidAudit = fopen([cd '\audit.m']);
+        fprintf(fidAudit, '%%%% Audit\n%%\n%% Problem: %s\n%%\n%% TimeStamp: %s\n%%\n', strFName, datestr(datetime));
+        cellWrong = {};
+    else
+        fidAudit = -1;
     end
     % If we are reading from a database, then get those values:
     if stcSwitches.LoadDatabase
@@ -409,7 +418,11 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                     cellViewer(1:intIterationNumber) = cViewer(intIterationNumber:-1:1);
                     set(hViewer.tbVViewBox, 'String', strjoin(cellViewer, '\n'));
                 end
-                break
+                if stcSwitches.Auditing
+                    
+                else
+                    break;
+                end
             catch ME
                 if ~isempty(findobj('Tag', '__uiTHelper__'))
                     delete(findobj('Tag', '__uiTHelper__'));

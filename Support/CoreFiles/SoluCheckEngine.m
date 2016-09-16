@@ -590,7 +590,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                         cellViewer(1:intIterationNumber) = cViewer(intIterationNumber:-1:1);
                         set(hViewer.tbVViewBox, 'String', strjoin(cellViewer, '\n'));
                     end
-                        break
+                    break
                 end
                     
             end

@@ -767,8 +767,7 @@ if ~bError
             sound(stcSounds(intChoice).Pass{:});
         end
     elseif isempty(strEngineError)
-        % tell the user we ERRORED; this DOES NOT (necessarily) MEAN A
-        % FAILURE! Play the audio as well.
+            % tell the user that they failed! Play the sound as well.
         strResult = sprintf(['We have successfully tested your function, and we found a disagreement. The iteration number was %d, and the arguments used for this iteration, '...
             'as well as your answers and the solutions, have been output to the command line.\nTest Failed!\nAlerts Generated:\n%s'], intArgNumber, strError);
         set(handles.stBTestResults, 'string', strResult, 'BackgroundColor', 'Red', 'ForegroundColor', 'white');
@@ -777,7 +776,8 @@ if ~bError
             sound(stcSounds(intChoice).Fail{:});
         end
     else
-        % tell the user that they failed! Play the sound as well.
+        % tell the user we ERRORED; this DOES NOT (necessarily) MEAN A
+        % FAILURE! Play the audio as well.
         strResult = sprintf('We were unsuccessful in testing the functions; Here''s the error message that was last produced:\n%s\nTest Error!', strEngineError);
         set(handles.stBTestResults, 'string', strResult, 'BackgroundColor', 'Yellow', 'ForegroundColor', 'black');
         if ~handles.cbBMute.Value

@@ -3,7 +3,7 @@
     for iCounter__SystemVariable = 1:numel(cellFileNames__SystemVariable)
         try
             addpath(strjoin(cellFileNames__SystemVariable{iCounter__SystemVariable}, ''));
-            eval(['load(''', char(cellFileNames__SystemVariable{iCounter__SystemVariable}{2}), ''');']);
+            evalc(['load(''', char(cellFileNames__SystemVariable{iCounter__SystemVariable}{2}), ''');']);
             rmpath(strjoin(cellFileNames__SystemVariable{iCounter__SystemVariable}, ''));
         catch ME
             out = 0;
@@ -21,17 +21,17 @@
     % Now we have a list of variable names; now use the eval of evalin!
     for iCounter__SystemVariable = evalin('base', 'who')'
         if ~any(strcmp(iCounter__SystemVariable{1}, {'iCounter__SystemVariable', 'cellFormula__SystemVariable', 'cellError__SystemVariable'}))
-            eval([iCounter__SystemVariable{1}, ' = ', ['evalin(''base'', ''', iCounter__SystemVariable{1}, ''');']]);
+            evalc([iCounter__SystemVariable{1}, ' = ', ['evalin(''base'', ''', iCounter__SystemVariable{1}, ''');']]);
         end
     end
     intIterationNumber = evalin('caller', 'intIterationNumber'); %#ok<NASGU>
     % Now all of our variables have been defined; now we have to execute the
     % actual code!
     try
-        out = eval(strjoin(cellFormula__SystemVariable, '\n'));
+        [~, out] = eval(strjoin(cellFormula__SystemVariable, '\n'));
     catch ME
         try
-            eval(strjoin(cellFormula__SystemVariable, '\n'));
+            evalc(strjoin(cellFormula__SystemVariable, '\n'));
         catch  %#ok<CTCH>
             cellError__SystemVariable = {true, ME, {'Formulaic Error:', ME.identifier, ME.message}};
         end

@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2946255830" file="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development\SoluCheck.prj" location="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development" name="SoluCheck" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1207382572" file="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development\SoluCheck.prj" location="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development" name="SoluCheck" target="target.mlapps" target-name="Package App">
     <param.appname>SoluCheck</param.appname>
     <param.authnamewatermark>Alexander Rao</param.authnamewatermark>
     <param.email>solucheck@gmail.com</param.email>

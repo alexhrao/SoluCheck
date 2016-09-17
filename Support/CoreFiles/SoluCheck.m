@@ -10,7 +10,9 @@ function varargout = SoluCheck(varargin)
 % See also: AdvancedOptions, SoluCheckEngine
 if isempty(varargin)
     disp('Loading SoluCheck, Please Wait...');
-    addpath(cd());
+    strPath = cd();
+    addpath(strPath);
+    addpath([strPath(1:end-9) 'Media'], [strPath(1:end-9) 'Documentation'])
     varargin{1} = true;
 end
 gui_Singleton = 1;

@@ -96,6 +96,7 @@ if ~isappdata(hObject, 'stcSwitches')
     uiBSoluCheckMenuMute = uimenu(uiBSoluCheckMenuSettings, 'Tag', 'uiBSettingsMute', 'Label', 'Mute', 'Checked', 'off', 'Callback', @uiBMenuMute_Callback, 'Accelerator', 'M');
     uimenu(uiBSoluCheckMenuSettings, 'Tag', 'uiBMenuUninstall', 'Label', 'Uninstall SoluCheck...', 'Callback', @uiBSoluCheckMenuUninstall_Callback);
     uimenu(uiBSoluCheckMenuSettings, 'Tag', 'uiBInstallEngine', 'Label', 'Install Stand-Alone Engine', 'Callback', @uiBSoluCheckMenuInstallEngine_Callback);
+    uimenu(uiBSoluCheckMenuSettings, 'Tag', 'uiBPreferences', 'Label', 'Preferences...', 'Callback', @uiBSoluCheckMenuPref_Callback);
     uiBHelpMenu = uimenu('Tag', 'uiBHelp', 'Label', 'Help');
     uimenu(uiBHelpMenu, 'Tag', 'uiBDocumentation', 'Label', 'Documentation...', 'Callback', @uiBDocumentation_Callback, 'Accelerator', 'H');
     % Create the progress bar
@@ -1554,6 +1555,9 @@ if ~all(strPath == 0) && numel(strPath) ~= 1
     cd(strOldDir);
 end
 
+function uiBSoluCheckMenuPref_Callback(hObject, eventdata, handles)
+userPrefs();
+
 % --- Executes on button press in pbBHelp.
 function pbBHelp_Callback(hObject, eventdata, handles)
 % hObject    handle to pbBHelp (see GCBO)
@@ -1626,7 +1630,8 @@ strOldDir = getappdata(findobj('Tag', 'uiBSoluCheck'), 'strOldDir');
 % a cell array of all possible figure tags:
 cellFigures = {'uiAAdvancedOptions', 'uiFViewArguments', 'uiPPlots', 'uiEExempt',...
     'uiDLoadDatabase', 'uiLLoadVariables', 'uiNNotifications', 'uiRMaxMin', ...
-    'uiSArrSize', 'uiVViewer', 'uiHHelp', 'uiWWorkSpace', 'uiPParameters'};
+    'uiSArrSize', 'uiVViewer', 'uiHHelp', 'uiWWorkSpace', 'uiPParameters', ...
+    'uiRPrefs'};
 % if we can find the figure, delete it!
 for i = 1:numel(cellFigures)
     if ~isempty(findobj('Tag', cellFigures{i}))

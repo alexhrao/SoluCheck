@@ -22,9 +22,12 @@ function varargout = userPrefs(varargin)
 
 % Edit the above text to modify the response to help userPrefs
 
-% Last Modified by GUIDE v2.5 17-Sep-2016 10:45:08
+% Last Modified by GUIDE v2.5 17-Sep-2016 12:42:41
 
 % Begin initialization code - DO NOT EDIT
+%#ok<*DEFNU>
+%#ok<*INUSL>
+%#ok<*INUSD>
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
@@ -89,18 +92,18 @@ varargout{1} = handles.output;
 
 
 
-function tbID_Callback(hObject, eventdata, handles)
-% hObject    handle to tbID (see GCBO)
+function tbRGTID_Callback(hObject, eventdata, handles)
+% hObject    handle to tbRGTID (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of tbID as text
-%        str2double(get(hObject,'String')) returns contents of tbID as a double
-
+% Hints: get(hObject,'String') returns contents of tbRGTID as text
+%        str2double(get(hObject,'String')) returns contents of tbRGTID as a double
+fprintf('Hello world!');
 
 % --- Executes during object creation, after setting all properties.
-function tbID_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to tbID (see GCBO)
+function tbRGTID_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to tbRGTID (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -225,3 +228,4 @@ for k = 1:numel(cellFields)
     end
 end
 fclose(fid);
+close(hPrefs);

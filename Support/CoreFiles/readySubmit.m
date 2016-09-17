@@ -29,7 +29,8 @@ try
     intStart = find(strFound(cellLines, 'Files to submit:')) + 1;
     intFinish = find(strFound(cellLines, 'Instructions:')) - 2;
     cellFiles = cellLines(intStart:intFinish);
-    cellFiles = cellfun(@(str)(str(7:end)), cellFiles, 'uni', false);
+    cellPosn = num2cell(cellfun(@(c)(c(1)), cellfun(@(str)(regexp(str, '\w')), cellFiles, 'uni', false)));
+    cellFiles = cellfun(@(str, pos)(str(pos:end)), cellFiles, cellPosn, 'uni', false);
     fCopy = @(str)(copyfile(str, 'HW_FilesToSubmit'));
     cellfun(fCopy, cellFiles, 'uni', false);
     strStatus = 'Files Ready to Submit!';

@@ -99,7 +99,6 @@ function tbRGTID_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of tbRGTID as text
 %        str2double(get(hObject,'String')) returns contents of tbRGTID as a double
-fprintf('Hello world!');
 
 % --- Executes during object creation, after setting all properties.
 function tbRGTID_CreateFcn(hObject, eventdata, handles)

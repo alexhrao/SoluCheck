@@ -90,7 +90,8 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                              'FileTesting', false, ...
                              'ImageTesting', false, ...
                              'VariableIn', false, ...
-                             'VariableOut', false);
+                             'VariableOut', false, ...
+                             'Auditing', false);
         vecOut = [];
     end
     if stcSwitches.FileTesting || stcSwitches.ImageTesting
@@ -131,9 +132,8 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
     end
     
     if stcSwitches.Auditing
-        fidAudit = fopen([cd '\audit.m']);
-        fprintf(fidAudit, '%%%% Audit\n%%\n%% Problem: %s\n%%\n%% TimeStamp: %s\n%%\n', strFName, datestr(datetime));
-        cellWrong = {};
+        fidAudit = fopen([cd '\auditFile.m'], 'w');
+        fprintf(fidAudit, '%%%% Audit:\n%%\n%% Problem: %s\n%%\n%% TimeStamp: %s\n%%\n', strFName, datestr(datetime));
     else
         fidAudit = -1;
     end
@@ -393,6 +393,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
             % Store our errors!
             strCodeErrorID = ME.identifier;
             strCodeErrorMsg = ME.message;
+            cellAnswers(1:2) = {strCodeErrorID, strCodeErrorMsg};
             try
                 % Try the solution code; if it does work, then coder
                 % screwed up code; else, if the error messages are the
@@ -419,7 +420,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                     set(hViewer.tbVViewBox, 'String', strjoin(cellViewer, '\n'));
                 end
                 if stcSwitches.Auditing
-                    
+                    audit(intIterationNumber, cellArgs, cellAnswers, cellSolutions, fidAudit);
                 else
                     break;
                 end
@@ -431,6 +432,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                     logPassed = true;
                     bContinue = true;
                 else
+                    cellSolutions(1:2) = {strCodeErrorID, ME.identifier};
                     logPassed = false;
                     strError = sprintf('Code File:\n%s\n%s\n\nSolution File:\n%s\n%s', strCodeErrorID, strCodeErrorMsg, ME.identifier, ME.message);
                     if stcSwitches.Details
@@ -443,7 +445,11 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                         cellViewer(1:intIterationNumber) = cViewer(intIterationNumber:-1:1);
                         set(hViewer.tbVViewBox, 'String', strjoin(cellViewer, '\n'));
                     end
+                    if stcSwitches.Auditing
+                        audit(intIterationNumber, cellArgs, cellAnswers, cellSolutions, fidAudit);
+                    else
                         break
+                    end
                 end
             end
         end
@@ -535,7 +541,11 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                     cellViewer(1:intIterationNumber) = cViewer(intIterationNumber:-1:1);
                     set(hViewer.tbVViewBox, 'String', strjoin(cellViewer, '\n'));
                 end
-                break
+                if stcSwitches.Auditing
+                    audit(intIterationNumber, cellArgs, cellAnswers, cellSolutions, fidAudit);
+                else
+                    break
+                end
             end
         end
         % Check if we are in agreement, OR if it is ok to continue!
@@ -603,177 +613,185 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                         cellViewer(1:intIterationNumber) = cViewer(intIterationNumber:-1:1);
                         set(hViewer.tbVViewBox, 'String', strjoin(cellViewer, '\n'));
                     end
-                    break
+                    if stcSwitches.Auditing
+                        audit(intIterationNumber, cellArgs, cellAnswers, cellSolutions, fidAudit);
+                    else
+                        break
+                    end
                 end
                     
             end
             % As long as we aren't at the end!
-            if intIterationNumber < intIterations
-                cellArgs = celCounter;
-                % Reload our Arguments:
-                for i = 1:intArgs;
-                    if stcSwitches.LoadDatabase
-                        % If we are loading a database, just read the next
-                        % line!
-                        cellArgs{i} = cTests{intIterationNumber, i};
-                    elseif cellDataType{i} == 7
-                        % If we have a formulaic entry, RE EVALUATE our
-                        % entry!
-                        [varArg, cellError] = customWorkSpace__SystemFunction(cellFormulaic{i});
-                        if cellError{1}
-                            cstrError = cellError{3};
-                            intErrorLines = numel(cstrError);
-                            logPassed = false;
-                            if stcSwitches.Details
-                                cViewer{intIterationNumber, 1} = sprintf('>> Argument #%d: Formulaic Error!', intIterationNumber);
-                                cellTemp = cell(1, intOldLines + intIterationNumber);
-                                for j = 1:intOldLines
-                                    cellTemp{j} = strOld(j, :);
-                                end
-                                cellTemp(intIterationNumber+1:end) = cellTemp(1:intOldLines);
-                                cellTemp(1:intIterationNumber) = cViewer(intIterationNumber:-1:1);
-                                cellViewer = cell(intErrorLines + intIterationNumber + intOldLines);
-                                cellViewer(1:intErrorLines) = cstrError;
-                                cellViewer((intErrorLines+1):end) = cellTemp;
-                                set(hViewer.tbVViewBox, 'String', strjoin(cellViewer, '\n'));
-                            end
-                            break
-                        else
-                            cellArgs{i} = varArg;
-                        end
-                    elseif cellDataType{i} == 1
-                        % If we have a data type of 1, then re evaluate our
-                        % stored variable!
-                        tbBArgument = getappdata(hSoluCheck, 'tbBArgument');
-                        [varArg, cellError] = customWorkSpace__SystemFunction({['out = ' tbBArgument{i}.String ';']});
-                        if cellError{1}
-                            cstrError = cellError{3};
-                            intErrorLines = numel(cstrError);
-                            logPassed = false;
-                            if stcSwitches.Details
-                                cViewer{intIterationNumber, 1} = sprintf('>> Argument #%d: Formulaic Error!', intIterationNumber);
-                                cellTemp = cell(1, intOldLines + intIterationNumber);
-                                for j = 1:intOldLines
-                                    cellTemp{j} = strOld(j, :);
-                                end
-                                cellTemp(intIterationNumber+1:end) = cellTemp(1:intOldLines);
-                                cellTemp(1:intIterationNumber) = cViewer(intIterationNumber:-1:1);
-                                cellViewer = cell(1, intErrorLines + intIterationNumber + intOldLines);
-                                cellViewer(1:intErrorLines) = cstrError;
-                                cellViewer((intErrorLines+1):end) = cellTemp;
-                                set(hViewer.tbVViewBox, 'String', strjoin(cellViewer, '\n'));
-                            end
-                            return
-                        else
-                            cellArgs{i} = varArg;
-                        end
-                    else
-                        % Otherwise, step as normal. DO NOT step cell
-                        % arrays or structures!
-                        if (isnumeric(cellSteps{i})) && ~any(isnan(cellSteps{i})) && (~iscell(cellArgs{i}) && cellDataType{i} ~= 7 && cellDataType{i} ~= 1 && ~isstruct(cellArgs{i}))
-                            celCounter{i} = celCounter{i} + cellSteps{i};
-                            % Create a test; but keep our Counter!
-                            varTest = cellArgs{i} + cellSteps{i};
-                            % If we have maxes and mins, deal with them by
-                            % resetting outside ranged values to be inside
-                            % our range!
-                            if stcSwitches.MaxMin
-                                if ~any(any(varTest > cellRanges{i}(2) | varTest < cellRanges{i}(1)))
-                                    cellArgs{i} = cellArgs{i} + cellSteps{i};
-                                else
-                                    cellArgs{i}(cellArgs{i} == cellRanges{i}(2)) = cellRanges{i}(1);
-                                end
-                            else
-                                cellArgs{i} = cellArgs{i} + cellSteps{i};
-                            end
-                            % If we have exempt values, then deal with
-                            % these accordingly!
-                            if stcSwitches.Exempt
-                                for j = 1:length(cellExempt{i})
-                                    if isequal(varTest, cellExempt{i}{j})
-                                        % only take the FIRST stand in
-                                        % value, so that we won't get an
-                                        % error!
-                                        cellArgs{i}(cellArgs{i}==cellExempt{i}{j}) = cellStandIn{i}{1}(1);
-                                    end
-                                end
-                            end
-                            % Resize our array, if necessary, by filling
-                            % with the given value.
-                            if stcSwitches.ArrSize
-                                try
-                                    % if the array step is greater than 0,
-                                    % then add; otherwise, subtract for
-                                    % rows and columns!
-                                    if cellArraySizes{i}(1) > 0
-                                        cellArgs{i}(end+cellArraySizes{i}(1), :) = cellArraySizes{i}(3);
-                                        celCounter{i}(end+cellArraySizes{i}(1), :) = cellArraySizes{i}(3);
-                                    elseif numel(cellArgs{i}) > 0
-                                        cellArgs{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
-                                        celCounter{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
-                                    end
-
-                                    if cellArraySizes{i}(2) > 0
-                                        cellArgs{i}(:, end+cellArraySizes{i}(2)) = cellArraySizes{i}(3);
-                                        celCounter{i}(:, end+cellArraySizes{i}(2)) = cellArraySizes{i}(3);
-                                    elseif numel(cellArgs{i}) > 0
-                                        cellArgs{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
-                                        celCounter{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
-                                    end
-                                catch ME
-                                    % Say that we were unable to step; This
-                                    % will NOT include if we get to an
-                                    % array of 0!
-                                    logPassed = false;
-                                    strError = sprintf('Argument %d: Couldn''step array size.\n%s', intIterationNumber, ME.identifier);
-                                    return
-                                end
-                            end
-                            % Make sure we stay in the right data type!
-                            switch cellDataType{i}
-                                case 2
-                                    cellArgs{i} = char(cellArgs{i});
-                                case 3
-                                    cellArgs{i} = double(cellArgs{i});
-                                case 6
-                                    cellArgs{i} = cellArgs{i} < 2;
-                            end
-                        elseif iscell(cellArgs{i})
-                            % NOW we step cell arrays!
-                            if stcSwitches.ArrSize
-                                try
-                                    if cellArraySizes{i}(1) > 0
-                                        cellArgs{i}(end+cellArraySizes{i}(1), :) = {cellArraySizes{i}(3:end)};
-                                        celCounter{i}(end+cellArraySizes{i}(1), :) = {cellArraySizes{i}(3:end)};
-                                    else
-                                        cellArgs{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
-                                        celCounter{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
-                                    end
-
-                                    if cellArraySizes{i}(2) > 0
-                                        cellArgs{i}(:, end+cellArraySizes{i}(2)) = {cellArraySizes{i}(3:end)};
-                                        celCounter{i}(:, end+cellArraySizes{i}(2)) = {cellArraySizes{i}(3:end)};
-                                    else
-                                        cellArgs{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
-                                        celCounter{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
-                                    end
-                                catch ME
-                                    logPassed = false;
-                                    strError = sprintf('Argument %d: Couldn''step cell array size.\n%s', intIterationNumber, ME.identifier);
-                                    return
-                                end
-                            end
-                        end
-                    end
-                end
-            end
         else
             % If we are wrong, stop the process and report our error!
             logPassed = false;
             if stcSwitches.Details
                 cViewer{intIterationNumber, 1} = sprintf('>> Iteration #%d: Failed!', intIterationNumber);
             end
-            break
+            if stcSwitches.Auditing
+                audit(intIterationNumber, cellArgs, cellAnswers, cellSolutions, fidAudit);
+            else
+                break;
+            end
+        end
+        if intIterationNumber < intIterations
+            cellArgs = celCounter;
+            % Reload our Arguments:
+            for i = 1:intArgs;
+                if stcSwitches.LoadDatabase
+                    % If we are loading a database, just read the next
+                    % line!
+                    cellArgs{i} = cTests{intIterationNumber, i};
+                elseif cellDataType{i} == 7
+                    % If we have a formulaic entry, RE EVALUATE our
+                    % entry!
+                    [varArg, cellError] = customWorkSpace__SystemFunction(cellFormulaic{i});
+                    if cellError{1}
+                        cstrError = cellError{3};
+                        intErrorLines = numel(cstrError);
+                        logPassed = false;
+                        if stcSwitches.Details
+                            cViewer{intIterationNumber, 1} = sprintf('>> Argument #%d: Formulaic Error!', intIterationNumber);
+                            cellTemp = cell(1, intOldLines + intIterationNumber);
+                            for j = 1:intOldLines
+                                cellTemp{j} = strOld(j, :);
+                            end
+                            cellTemp(intIterationNumber+1:end) = cellTemp(1:intOldLines);
+                            cellTemp(1:intIterationNumber) = cViewer(intIterationNumber:-1:1);
+                            cellViewer = cell(intErrorLines + intIterationNumber + intOldLines);
+                            cellViewer(1:intErrorLines) = cstrError;
+                            cellViewer((intErrorLines+1):end) = cellTemp;
+                            set(hViewer.tbVViewBox, 'String', strjoin(cellViewer, '\n'));
+                        end
+                        break
+                    else
+                        cellArgs{i} = varArg;
+                    end
+                elseif cellDataType{i} == 1
+                    % If we have a data type of 1, then re evaluate our
+                    % stored variable!
+                    tbBArgument = getappdata(hSoluCheck, 'tbBArgument');
+                    [varArg, cellError] = customWorkSpace__SystemFunction({['out = ' tbBArgument{i}.String ';']});
+                    if cellError{1}
+                        cstrError = cellError{3};
+                        intErrorLines = numel(cstrError);
+                        logPassed = false;
+                        if stcSwitches.Details
+                            cViewer{intIterationNumber, 1} = sprintf('>> Argument #%d: Formulaic Error!', intIterationNumber);
+                            cellTemp = cell(1, intOldLines + intIterationNumber);
+                            for j = 1:intOldLines
+                                cellTemp{j} = strOld(j, :);
+                            end
+                            cellTemp(intIterationNumber+1:end) = cellTemp(1:intOldLines);
+                            cellTemp(1:intIterationNumber) = cViewer(intIterationNumber:-1:1);
+                            cellViewer = cell(1, intErrorLines + intIterationNumber + intOldLines);
+                            cellViewer(1:intErrorLines) = cstrError;
+                            cellViewer((intErrorLines+1):end) = cellTemp;
+                            set(hViewer.tbVViewBox, 'String', strjoin(cellViewer, '\n'));
+                        end
+                        return
+                    else
+                        cellArgs{i} = varArg;
+                    end
+                else
+                    % Otherwise, step as normal. DO NOT step cell
+                    % arrays or structures!
+                    if (isnumeric(cellSteps{i})) && ~any(isnan(cellSteps{i})) && (~iscell(cellArgs{i}) && cellDataType{i} ~= 7 && cellDataType{i} ~= 1 && ~isstruct(cellArgs{i}))
+                        celCounter{i} = celCounter{i} + cellSteps{i};
+                        % Create a test; but keep our Counter!
+                        varTest = cellArgs{i} + cellSteps{i};
+                        % If we have maxes and mins, deal with them by
+                        % resetting outside ranged values to be inside
+                        % our range!
+                        if stcSwitches.MaxMin
+                            if ~any(any(varTest > cellRanges{i}(2) | varTest < cellRanges{i}(1)))
+                                cellArgs{i} = cellArgs{i} + cellSteps{i};
+                            else
+                                cellArgs{i}(cellArgs{i} == cellRanges{i}(2)) = cellRanges{i}(1);
+                            end
+                        else
+                            cellArgs{i} = cellArgs{i} + cellSteps{i};
+                        end
+                        % If we have exempt values, then deal with
+                        % these accordingly!
+                        if stcSwitches.Exempt
+                            for j = 1:length(cellExempt{i})
+                                if isequal(varTest, cellExempt{i}{j})
+                                    % only take the FIRST stand in
+                                    % value, so that we won't get an
+                                    % error!
+                                    cellArgs{i}(cellArgs{i}==cellExempt{i}{j}) = cellStandIn{i}{1}(1);
+                                end
+                            end
+                        end
+                        % Resize our array, if necessary, by filling
+                        % with the given value.
+                        if stcSwitches.ArrSize
+                            try
+                                % if the array step is greater than 0,
+                                % then add; otherwise, subtract for
+                                % rows and columns!
+                                if cellArraySizes{i}(1) > 0
+                                    cellArgs{i}(end+cellArraySizes{i}(1), :) = cellArraySizes{i}(3);
+                                    celCounter{i}(end+cellArraySizes{i}(1), :) = cellArraySizes{i}(3);
+                                elseif numel(cellArgs{i}) > 0
+                                    cellArgs{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
+                                    celCounter{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
+                                end
+
+                                if cellArraySizes{i}(2) > 0
+                                    cellArgs{i}(:, end+cellArraySizes{i}(2)) = cellArraySizes{i}(3);
+                                    celCounter{i}(:, end+cellArraySizes{i}(2)) = cellArraySizes{i}(3);
+                                elseif numel(cellArgs{i}) > 0
+                                    cellArgs{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
+                                    celCounter{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
+                                end
+                            catch ME
+                                % Say that we were unable to step; This
+                                % will NOT include if we get to an
+                                % array of 0!
+                                logPassed = false;
+                                strError = sprintf('Argument %d: Couldn''step array size.\n%s', intIterationNumber, ME.identifier);
+                                return
+                            end
+                        end
+                        % Make sure we stay in the right data type!
+                        switch cellDataType{i}
+                            case 2
+                                cellArgs{i} = char(cellArgs{i});
+                            case 3
+                                cellArgs{i} = double(cellArgs{i});
+                            case 6
+                                cellArgs{i} = cellArgs{i} < 2;
+                        end
+                    elseif iscell(cellArgs{i})
+                        % NOW we step cell arrays!
+                        if stcSwitches.ArrSize
+                            try
+                                if cellArraySizes{i}(1) > 0
+                                    cellArgs{i}(end+cellArraySizes{i}(1), :) = {cellArraySizes{i}(3:end)};
+                                    celCounter{i}(end+cellArraySizes{i}(1), :) = {cellArraySizes{i}(3:end)};
+                                else
+                                    cellArgs{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
+                                    celCounter{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
+                                end
+
+                                if cellArraySizes{i}(2) > 0
+                                    cellArgs{i}(:, end+cellArraySizes{i}(2)) = {cellArraySizes{i}(3:end)};
+                                    celCounter{i}(:, end+cellArraySizes{i}(2)) = {cellArraySizes{i}(3:end)};
+                                else
+                                    cellArgs{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
+                                    celCounter{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
+                                end
+                            catch ME
+                                logPassed = false;
+                                strError = sprintf('Argument %d: Couldn''step cell array size.\n%s', intIterationNumber, ME.identifier);
+                                return
+                            end
+                        end
+                    end
+                end
+            end
         end
         % Update the progress bar:
         if ishandle(hSoluCheck)
@@ -782,7 +800,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
         end
     end
     % if we passed, update the progress bar:
-    if ishandle(hSoluCheck) && logPassed
+    if ishandle(hSoluCheck) && (logPassed || stcSwitches.Auditing)
         objProgressBar.setMaximum(100);
         objProgressBar.setValue(100);
         objProgressBar.setString('100.00%');

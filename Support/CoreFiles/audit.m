@@ -16,8 +16,10 @@ end
 
 function printCell(fid, varData, intArg) %#ok<INUSL>
     strData = evalc('disp(varData)');
-    fprintf(fid, '%% Argument %d:\n%%\n', intArg);
-    for r = 1:size(strData, 1)
-        fprintf(fid, '%% %s\n%%\n', strData(r, :));
+    cellData = strsplit(strData, char(10));
+    cellData(cellfun(@isempty, cellData)) = [];
+    fprintf(fid, '%%     Argument %d:\n%%\n', intArg);
+    for k = 1:numel(cellData)
+        fprintf(fid, '%%         %s\n%%\n', cellData{k});
     end
 end

@@ -29,7 +29,7 @@ if nargout
 else
     gui_mainfcn(gui_State, varargin{:});
 end
-% End initialization code - DO NOT EDIT
+
 
 
 % --- Executes just before SoluCheck is made visible.
@@ -815,7 +815,8 @@ if ~bError
     % publish our file, if need be!
     if fidAudit ~= -1
         fclose(fidAudit);
-        fidAudit = publish([cd '\audit.m']);
+        fidAudit = publish([cd '\auditFile.m'], struct('outputDir', cd));
+        delete([cd '\auditFile.m']);
         web(fidAudit);
     end
 else
@@ -1633,6 +1634,17 @@ end
 cd(strOldDir);
 delete(hObject);
 disp('SoluCheck has successfully closed.');
+
+% --- Executes on button press in cxBAudit.
+function cxBAudit_Callback(hObject, eventdata, handles)
+% hObject    handle to cxBAudit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+stcSwitches = getappdata(findobj('tag', 'uiBSoluCheck'), 'stcSwitches');
+stcSwitches.Auditing = get(hObject, 'Value');
+setappdata(findobj('tag', 'uiBSoluCheck'), 'stcSwitches', stcSwitches);
+% Hint: get(hObject,'Value') returns toggle state of cxBAudit
+
 
 % --- Executes on key press with focus on uiBSoluCheck and none of its controls.
 function uiBSoluCheck_KeyPressFcn(hObject, eventdata, handles)

@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1207382572" file="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development\SoluCheck.prj" location="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development" name="SoluCheck" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2016478552" file="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development\SoluCheck.prj" location="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development" name="SoluCheck" target="target.mlapps" target-name="Package App">
     <param.appname>SoluCheck</param.appname>
     <param.authnamewatermark>Alexander Rao</param.authnamewatermark>
     <param.email>solucheck@gmail.com</param.email>
@@ -21,7 +21,7 @@
 &lt;/ul&gt;
 With it's newest upgrade, SoluCheck 2.0 is meaner and leaner than ever before. Quickly and easily test your code against solutions, then drill down to find out exactly where your answers differ from the solution's answers. Precisely specify an exact pattern of arguments for SoluCheck to use to test your code. Do all of this and so much more with SoluCheck, the one and only MATLAB Code Testing Suite you will ever need!</param.description>
     <param.screenshot>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Branding\ScreenShotNew.jpg</param.screenshot>
-    <param.version>2.3.0.0</param.version>
+    <param.version>2.3.1.0</param.version>
     <param.products.name>
       <item>MATLAB</item>
     </param.products.name>
@@ -74,6 +74,8 @@ With it's newest upgrade, SoluCheck 2.0 is meaner and leaner than ever before. Q
       <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\CoreFiles\SoluCheckEngine.m</file>
       <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\CoreFiles\stcNumel.m</file>
       <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\CoreFiles\strFound.m</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\CoreFiles\userPrefs.fig</file>
+      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\CoreFiles\userPrefs.m</file>
     </fileset.depfun>
     <fileset.resources>
       <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Documentation\SoluCheckDocumentation.pdf</file>

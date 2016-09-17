@@ -22,7 +22,7 @@ function varargout = userPrefs(varargin)
 
 % Edit the above text to modify the response to help userPrefs
 
-% Last Modified by GUIDE v2.5 17-Sep-2016 12:42:41
+% Last Modified by GUIDE v2.5 17-Sep-2016 13:20:58
 
 % Begin initialization code - DO NOT EDIT
 %#ok<*DEFNU>
@@ -229,3 +229,16 @@ for k = 1:numel(cellFields)
 end
 fclose(fid);
 close(hPrefs);
+
+
+% --- Executes on key press with focus on uiRPrefs and none of its controls.
+function uiRPrefs_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to uiRPrefs (see GCBO)
+% eventdata  structure with the following fields (see MATLAB.UI.FIGURE)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
+if strcmp(eventdata.Key, 'escape')
+    close(findobj('tag', 'uiRPrefs'));
+end

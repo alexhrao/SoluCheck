@@ -10,9 +10,9 @@ function varargout = SoluCheck(varargin)
 % See also: AdvancedOptions, SoluCheckEngine
 if isempty(varargin)
     disp('Loading SoluCheck, Please Wait...');
-    strPath = cd();
+    [strPath, ~, ~] = fileparts(mfilename('fullpath'));
     addpath(strPath);
-    addpath([strPath(1:end-9) 'Media'], [strPath(1:end-9) 'Documentation'])
+    addpath([strPath(1:end-9) '\Media'], [strPath(1:end-9) '\Documentation'])
     varargin{1} = true;
 end
 gui_Singleton = 1;

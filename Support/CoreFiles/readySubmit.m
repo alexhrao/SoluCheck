@@ -1,5 +1,14 @@
 function [strStatus, strPath] = readySubmit()
 try
+    try
+        fidInfo = fopen('SoluCheckInfo.txt', 'r');
+        strName = fgetl(fidInfo);
+        strID = fgetl(fidInfo);
+        strEmail = fgetl(fidInfo);
+        strCourse = fgetl(fidInfo);
+        strSection = fgetl(fidInfo);
+    catch ME
+        
     stcFiles = dir();
     cellFiles = {stcFiles.name};
     cellInd = regexp(cellFiles, 'hw\d\d\.m');

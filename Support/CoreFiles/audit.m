@@ -14,8 +14,12 @@ function audit(intIt, cArgs, cAns, cSol, fid)
     fprintf(fid, '%%\n');
 end
 
-function printCell(fid, varData, intArg) %#ok<INUSL>
-    strData = evalc('disp(varData)');
+function printCell(fid, varData, intArg)
+    if isempty(varData)
+        strData = sprintf('Empty variable of class %s', class(varData));
+    else
+        strData = evalc('disp(varData)');
+    end
     cellData = strsplit(strData, char(10));
     cellData(cellfun(@isempty, cellData)) = [];
     fprintf(fid, '%%     Argument %d:\n%%\n', intArg);

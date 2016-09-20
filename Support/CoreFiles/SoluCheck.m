@@ -1244,7 +1244,7 @@ cellNames = fieldnames(handles)';
 cellNames = [cellNames, {'objProgressBar'}];
 cellFields = {stBArgumentName, tbBArgument, pmBDataType, tbBStepSize, stBDivider};
 cellReserved = {'pbBAdvancedOptions', 'pbBHelp', 'cbBMute', 'output', 'uiBSoluCheck', ...
-    'objProgressBar', 'stBTestResults'};
+    'objProgressBar', 'stBTestResults', 'cxBAudit'};
 % for each of the names, if it is NOT one of the reserved tags, move it
 % accordingly
 for i = 1:length(cellNames)

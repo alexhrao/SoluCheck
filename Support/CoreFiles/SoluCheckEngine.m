@@ -221,7 +221,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
     % system function to evaluate their formulaic entry within a contained
     % workspace:
     for i = 1:numel(cellArgs)
-        if cellDataType{i} == 7;
+        if cellDataType{i} == 7
             % If we get an error, print it and report back:
             [varArg, cellError] = customWorkSpace__SystemFunction(cellFormulaic{i});
             if cellError{1}
@@ -287,7 +287,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
     % Begin iteratively testing code!
     while intIterationNumber < intIterations
         drawnow();
-        if getappdata(hSoluCheck, 'logCancel');
+        if getappdata(hSoluCheck, 'logCancel')
             setappdata(hSoluCheck, 'logCancel', false);
             logPassed = false;
             strError = 'User Aborted Test.';
@@ -637,7 +637,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
         if intIterationNumber < intIterations
             cellArgs = celCounter;
             % Reload our Arguments:
-            for i = 1:intArgs;
+            for i = 1:intArgs
                 if stcSwitches.LoadDatabase
                     % If we are loading a database, just read the next
                     % line!

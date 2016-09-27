@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="4155492839" file="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development\SoluCheck.prj" location="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development" name="SoluCheck" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="863307047" file="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development\SoluCheck.prj" location="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development" name="SoluCheck" target="target.mlapps" target-name="Package App">
     <param.appname>SoluCheck</param.appname>
     <param.authnamewatermark>Alexander Rao</param.authnamewatermark>
     <param.email>solucheck@gmail.com</param.email>
@@ -21,7 +21,7 @@
 &lt;/ul&gt;
 With it's newest upgrade, SoluCheck 2.0 is meaner and leaner than ever before. Quickly and easily test your code against solutions, then drill down to find out exactly where your answers differ from the solution's answers. Precisely specify an exact pattern of arguments for SoluCheck to use to test your code. Do all of this and so much more with SoluCheck, the one and only MATLAB Code Testing Suite you will ever need!</param.description>
     <param.screenshot>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Branding\ScreenShotNew.jpg</param.screenshot>
-    <param.version>2.3.1.3</param.version>
+    <param.version>2.3.1.5</param.version>
     <param.products.name>
       <item>MATLAB</item>
     </param.products.name>
@@ -29,7 +29,7 @@ With it's newest upgrade, SoluCheck 2.0 is meaner and leaner than ever before. Q
       <item>1</item>
     </param.products.id>
     <param.products.version>
-      <item>9.0</item>
+      <item>9.1</item>
     </param.products.version>
     <param.platforms />
     <param.output>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development</param.output>
@@ -97,7 +97,7 @@ With it's newest upgrade, SoluCheck 2.0 is meaner and leaner than ever before. Q
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2016a</root>
+      <root>C:\Program Files\MATLAB\R2016b</root>
       <toolboxes>
         <toolbox name="fixedpoint" />
         <toolbox name="matlabcoder" />

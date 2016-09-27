@@ -23,7 +23,5 @@ function printCell(fid, varData, intArg)
     cellData = strsplit(strData, char(10));
     cellData(cellfun(@isempty, cellData)) = [];
     fprintf(fid, '%%     Argument %d:\n%%\n', intArg);
-    for k = 1:numel(cellData)
-        fprintf(fid, '%%         %s\n%%\n', cellData{k});
-    end
+    cellfun(@(d)(fprintf(fid, '%%         %s\n%%\n', d)), cellData, 'uni', false);
 end

@@ -818,9 +818,9 @@ if ~bError
     % publish our file, if need be!
     if fidAudit ~= -1
         fclose(fidAudit);
-        fidAudit = publish([cd '\auditFile.m'], struct('outputDir', cd));
+        fidAudit = publish([cd '\auditFile.m'], struct('outputDir', cd, 'evalCode', false));
         delete([cd '\auditFile.m']);
-        web(fidAudit);
+        web(fidAudit, '-browser');
     end
 else
     % if we errored out DURING THE CONVERSION PROCESS (NOT IN THE ENGINE),
@@ -911,7 +911,7 @@ end
 function pbPSave_Callback(hObject, callbackdata)
 [strName, strPath] = uiputfile({'*.jpg'}, 'Save As:', 'CodeAnalyzer.jpg');
 strFileName = [strPath, strName];
-if strName ~= 0;
+if strName ~= 0
     saveas(hObject.Parent, strFileName);
 end 
     
@@ -1209,13 +1209,13 @@ function uiBSoluCheck_SizeChangedFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 hSoluCheck = findobj('Tag', 'uiBSoluCheck');
 % if we are first starting, set the starting variables:
-if ~isappdata(hSoluCheck, 'vecOldSize');
+if ~isappdata(hSoluCheck, 'vecOldSize')
     vecOldSize = getpixelposition(hSoluCheck);
     vecOldSize = vecOldSize(3:4);
 else
     vecOldSize = getappdata(hSoluCheck, 'vecOldSize');
 end
-if ~isappdata(hSoluCheck, 'bFirstTime');
+if ~isappdata(hSoluCheck, 'bFirstTime')
     bFirstTime = true;
 else
     bFirstTime = getappdata(hSoluCheck, 'bFirstTime');
@@ -1224,7 +1224,7 @@ end
 % TIME, iNargin is empty, and so is cell names; thus, none of this code is
 % really run.
 vecSize = getpixelposition(hSoluCheck);
-if vecSize(4) <= 209;
+if vecSize(4) <= 209
     setpixelposition(hSoluCheck, [vecSize(1:3) 209]);
 end
 % Get our iNargin and all the uiControls that move.
@@ -1445,7 +1445,7 @@ function cbBMute_Callback(hObject, eventdata, handles)
 function uiBSoluCheckMenuSaveOutputs_Callback(hObject, eventdata, handles)
 hSoluCheck = findobj('Tag', 'uiBSoluCheck');
 % save our ouputs from the LAST run!
-if isappdata(hSoluCheck, 'cFinalArgs');
+if isappdata(hSoluCheck, 'cFinalArgs')
     cellFinalArgs = getappdata(hSoluCheck, 'cFinalArgs'); %#ok<NASGU>
     cellFinalCode = getappdata(hSoluCheck, 'cAnswers'); %#ok<NASGU>
     cellFinalSoln = getappdata(hSoluCheck, 'cSolutions'); %#ok<NASGU>
@@ -1468,7 +1468,7 @@ for i = 1:intLines
     cellDetails{i} = strOld(i, :);
 end
 [strFileName, strFilePath] = uiputfile('LogDetails.txt', 'Save Log As:');
-if strFileName ~= 0;
+if strFileName ~= 0
     fstFileName = [strFilePath, strFileName];
     fidDetails = fopen(fstFileName, 'w');
     for i = 1:intLines

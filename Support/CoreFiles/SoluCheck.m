@@ -9,7 +9,7 @@ function varargout = SoluCheck(varargin)
 %
 % See also: AdvancedOptions, SoluCheckEngine
 if isempty(varargin)
-    disp('Loading SoluCheck, Please Wait...');
+    fprintf('Loading SoluCheck, Please Wait...');
     [strPath, ~, ~] = fileparts(mfilename('fullpath'));
     addpath(strPath);
     addpath([strPath(1:end-9) '\Media'], [strPath(1:end-9) '\Documentation'])
@@ -140,7 +140,7 @@ handles.output = hObject;
 guidata(hObject, handles);
 % UIWAIT makes SoluCheck wait for user response (see UIRESUME)
 % uiwait(handles.uiBSoluCheck);
-disp('SoluCheck has successfully loaded.');
+fprintf(' SoluCheck has successfully loaded.\n');
 % --- Outputs from this function are returned to the command line.
 function varargout = SoluCheck_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
@@ -738,14 +738,14 @@ end
 % strError), DO NOT execute the SoluCheck Engine, and instead immediately
 % report back. 
 if ~bError
-    fprintf('Please Wait - SoluCheck is Testing...\n');
+    fprintf('Please Wait - SoluCheck is Testing...');
     % Retrieve ALL of the outputs from SoluCheck Engine, using the
     % arguments we've created above. The Engine is literally called
     % SoluCheckEngine
     [logPassed, strEngineError, intArgNumber, cellFinalArgs, cellAnswers, cellSolutions, vecCodeTime, vecSolnTime, fidAudit] = ...
         SoluCheckEngine(sFileName(1:end-2),sSolutionName(1:end-2), round(intIterations), cDataType, cArgs{:});
     % set the app data as public data:
-    fprintf('SoluCheck has finished testing. Analyzing Results...\n');
+    fprintf(' SoluCheck has finished testing. Analyzing Results...\n');
     setappdata(hSoluCheck, 'cFinalArgs', cellFinalArgs);
     setappdata(hSoluCheck, 'cAnswers', cellAnswers);
     setappdata(hSoluCheck, 'cSolutions', cellSolutions);
@@ -874,7 +874,7 @@ if stcSwitches.Notifications
         props.setProperty('mail.smtp.socketFactory.class', cOldPrf{5});
         props.setProperty('mail.smtp.socketFactory.port',cOldPrf{6});
     catch
-        disp('Your message was sent, but we ran into problems reverting back to the old settings.');
+        msgbox('Your message was sent, but we ran into problems reverting back to the old settings.\n');
     end
 end
 % if we have details to log, log them!
@@ -891,6 +891,7 @@ if stcSwitches.Details
     cellViewer{1} = strResult;
     set(hViewer, 'String', strjoin(cellViewer, '\n'));
 end
+fprintf(' Analyzed!\n');
 % tell the user that we are completely done!
 set(handles.pbBCancel, 'String', 'Done');
 
@@ -1530,6 +1531,7 @@ if strcmp(class(eventdata), 'matlab.ui.eventdata.UIClientComponentKeyEvent') %#o
         return
     end
 end
+fprintf('Uninstalling SoluCheck...');
 stcApps = matlab.apputil.getInstalledAppInfo;
 for i = stcApps
     if strcmp(i.name, 'SoluCheck')
@@ -1540,7 +1542,7 @@ end
 if ~isempty(strID)
     matlab.apputil.uninstall(strID);
 end
-disp('SoluCheck has successfully uninstalled.');
+fprintf(' SoluCheck has successfully uninstalled.\n');
 hSoluCheck = findobj('Tag', 'uiBSoluCheck');
 hUserPrompt = findobj('Tag', 'uiUUninstallSoluCheck');
 delete(hUserPrompt);
@@ -1622,7 +1624,7 @@ function uiBSoluCheck_CloseRequestFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: delete(hObject) closes the figure
-disp('Closing SoluCheck, Please Wait...');
+fprintf('Closing SoluCheck, Please Wait...');
 
 % get the original directory:
 strOldDir = getappdata(findobj('Tag', 'uiBSoluCheck'), 'strOldDir');
@@ -1640,7 +1642,7 @@ for i = 1:numel(cellFigures)
 end
 cd(strOldDir);
 delete(hObject);
-disp('SoluCheck has successfully closed.');
+fprintf(' SoluCheck has successfully closed.\n');
 
 % --- Executes on button press in cxBAudit.
 function cxBAudit_Callback(hObject, eventdata, handles)

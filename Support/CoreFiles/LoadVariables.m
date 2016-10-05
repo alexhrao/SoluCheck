@@ -109,7 +109,7 @@ cpbDelete = getappdata(hLoadVariables, 'cpbDelete');
 intLineNumber = hObject.Tag;
 intLineNumber = str2double(intLineNumber(end));
 [strFileName, strFilePath] = uigetfile('*.mat', 'Select your variable file:');
-if strFileName == 0;
+if strFileName == 0
     return
 end
 handles.pbLConfirm.Enable = 'on';

@@ -988,6 +988,14 @@ if ~strcmp(hObject.Enable, 'on')
         % if the value is 2, then we have a predefined variable; reload the
         % predefined variable list!
         cellVariables = evalin('base', 'who');
+        if stcSwitches.LoadVariables
+            cellFiles = getappdata(hSoluCheck, 'cellFileNames');
+            for i = 1:numel(cellFiles)
+                stcDetails = whos(matfile(cellFiles{i}{2}));
+                cellNames = {stcDetails.name};
+                cellVariables = [cellVariables cellNames]; %#ok<AGROW>
+            end
+        end
         uiWWorkSpace = figure('Visible', 'off', 'Name', ['SoluCheck: WorkSpace Variable #',...
         strName(12:end)], 'NumberTitle', 'off', 'position', [350 50 500 450], 'Tag', 'uiWWorkSpace', ...
             'Units', 'Normalized', 'KeyPressFcn', {@uiWWorkSpace_KeyPressFcn, hObject.Tag}, ...

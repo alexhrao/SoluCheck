@@ -2,7 +2,7 @@ function [strStatus, strPath] = readySubmit()
 strPath = '';
     function fCopy(str)
         try %#ok<TRYNC>
-            copyFile(str, 'HW_FilesToSubmit');
+            copyfile(str, 'HW_FilesToSubmit');
         end
     end
 try
@@ -105,7 +105,7 @@ try
     cellFiles = cellLines(intStart:intFinish);
     cellPosn = num2cell(cellfun(@(c)(c(1)), cellfun(@(str)(regexp(str, '\w')), cellFiles, 'uni', false)));
     cellFiles = cellfun(@(str, pos)(str(pos:end)), cellFiles, cellPosn, 'uni', false);
-    cellfun(fCopy, cellFiles, 'uni', false);
+    cellfun(@(str)(fCopy(str)), cellFiles, 'uni', false);
     strStatus = 'Files Ready to Submit!';
 catch ME %#ok<NASGU>
     strStatus = 'Unable to ready files. Please select a valid folder!';

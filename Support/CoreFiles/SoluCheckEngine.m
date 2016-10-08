@@ -34,7 +34,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
 %   See also: SoluCheck, AdvancedOptions
 
 % Initialize starting variables.
-    cellFigures = num2cell(findall(0, 'Type', 'Figure'))';
+    cellFigures = num2cell(findobj('Type', 'Figure'))';
     fExtract = @(fig)(fig.Tag);
     cellFigures = cellfun(fExtract, cellFigures, 'UniformOutput', false);
     strOldRecycle = recycle('off');
@@ -278,8 +278,16 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
         end
     end
     
+    % Now that we've defined everything; CHANGE the SoluCheck Tags to have
+    % a handle visibility of off:
+    for k = cellTags
+        fTag = findobj('Tag', k{1});
+        if ~isempty(fTag)
+            fTag.HandleVisibility = 'off';
+        end
+    end
     % Initialize our counters:
-    celCounter = cellArgs;
+    cellCounter = cellArgs;
     intArgs = length(cellArgs);
     vecCodeTime = zeros(1, intIterations);
     vecSolnTime = zeros(1, intIterations);
@@ -310,11 +318,6 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
         bContinue = false;
         % Test the given code first:
         try
-            % Protect ourselves against rogue plotting functions:
-            if stcSwitches.PlotTesting || stcSwitches.ImageTesting
-                figure('Visible', 'off', 'Tag', '__uiTHelper__');
-                intCodeFigures = 0;
-            end
             % Start timing:
             tic();
             % Assign our answers to the cell array:
@@ -367,11 +370,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
             if stcSwitches.PlotTesting
                 % If we are testing plots, save the plots as images, then
                 % read in the images!
-                hHelper = findobj('Tag', '__uiTHelper__');
-                if isempty(hHelper.Children)
-                    delete(hHelper);
-                end
-                stcFigures = findall(0, 'Type', 'Figure');
+                stcFigures = findobj('Type', 'Figure');
                 strOldFolder = cd(strFolder);
                 for i = 1:numel(stcFigures)
                     if ~any(strcmp(stcFigures(i).Tag, cellReserved))
@@ -383,13 +382,8 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                 end
                 cd(strOldFolder);
                 % Delete our protection from plots
-                delete(hHelper);
             end
         catch ME
-            % Delete protection:
-            if ~isempty(findobj('Tag', '__uiTHelper__'))
-                delete(findobj('Tag', '__uiTHelper__'));
-            end
             % Store our errors!
             strCodeErrorID = ME.identifier;
             strCodeErrorMsg = ME.message;
@@ -398,9 +392,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                 % Try the solution code; if it does work, then coder
                 % screwed up code; else, if the error messages are the
                 % same, then count it as a success!
-                figure('Visible', 'off', 'Tag', '__uiTHelper__');
                 [cellSolutions{1:end-2}] = feval(strFSolnName, cellArgs{:});
-                delete(findobj('Tag', '__uiTHelper__'));
                 strError = sprintf('Code File:\n%s\n%s', ME.identifier, ME.message);
                 logPassed = false;
                 if stcSwitches.FileTesting || stcSwitches.ImageTesting
@@ -425,9 +417,6 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                     break;
                 end
             catch ME
-                if ~isempty(findobj('Tag', '__uiTHelper__'))
-                    delete(findobj('Tag', '__uiTHelper__'));
-                end
                 if strcmp(strCodeErrorID, ME.identifier)
                     logPassed = true;
                     bContinue = true;
@@ -455,10 +444,6 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
         end
         % Try the given solution code:
         try
-            if stcSwitches.PlotTesting || stcSwitches.ImageTesting
-                figure('Tag', '__uiTHelper__', 'Visible', 'off');
-                intSolnFigures = 0;
-            end
             tic();
             [cellSolutions{1:end-2}] = feval(strFSolnName, cellArgs{:});
             vecSolnTime(intIterationNumber) = toc();
@@ -510,12 +495,8 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                 cellSolutions{end} = cellSolnAnswers;
             end
             if stcSwitches.PlotTesting
-                hHelper = findobj('Tag', '__uiTHelper__');
-                if isempty(hHelper.Children)
-                    delete(hHelper);
-                end
                 strOldFolder = cd(strFolder);
-                stcFigures = findall(0, 'Type', 'Figure');
+                stcFigures = findobj('Type', 'Figure');
                 for i = 1:numel(stcFigures)
                     if ~any(strcmp(stcFigures(i).Tag, cellReserved))
                         drawnow();
@@ -525,7 +506,6 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                     end
                 end
                 cd(strOldFolder);
-                delete(hHelper);
             end
         catch ME
             if ~bContinue
@@ -635,7 +615,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
             end
         end
         if intIterationNumber < intIterations
-            cellArgs = celCounter;
+            cellArgs = cellCounter;
             % Reload our Arguments:
             for i = 1:intArgs
                 if stcSwitches.LoadDatabase
@@ -697,7 +677,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                     % Otherwise, step as normal. DO NOT step cell
                     % arrays or structures!
                     if (isnumeric(cellSteps{i})) && ~any(isnan(cellSteps{i})) && (~iscell(cellArgs{i}) && cellDataType{i} ~= 7 && cellDataType{i} ~= 1 && ~isstruct(cellArgs{i}))
-                        celCounter{i} = celCounter{i} + cellSteps{i};
+                        cellCounter{i} = cellCounter{i} + cellSteps{i};
                         % Create a test; but keep our Counter!
                         varTest = cellArgs{i} + cellSteps{i};
                         % If we have maxes and mins, deal with them by
@@ -733,18 +713,18 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                                 % rows and columns!
                                 if cellArraySizes{i}(1) > 0
                                     cellArgs{i}(end+cellArraySizes{i}(1), :) = cellArraySizes{i}(3);
-                                    celCounter{i}(end+cellArraySizes{i}(1), :) = cellArraySizes{i}(3);
+                                    cellCounter{i}(end+cellArraySizes{i}(1), :) = cellArraySizes{i}(3);
                                 elseif numel(cellArgs{i}) > 0
                                     cellArgs{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
-                                    celCounter{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
+                                    cellCounter{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
                                 end
 
                                 if cellArraySizes{i}(2) > 0
                                     cellArgs{i}(:, end+cellArraySizes{i}(2)) = cellArraySizes{i}(3);
-                                    celCounter{i}(:, end+cellArraySizes{i}(2)) = cellArraySizes{i}(3);
+                                    cellCounter{i}(:, end+cellArraySizes{i}(2)) = cellArraySizes{i}(3);
                                 elseif numel(cellArgs{i}) > 0
                                     cellArgs{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
-                                    celCounter{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
+                                    cellCounter{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
                                 end
                             catch ME
                                 % Say that we were unable to step; This
@@ -770,18 +750,18 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                             try
                                 if cellArraySizes{i}(1) > 0
                                     cellArgs{i}(end+cellArraySizes{i}(1), :) = {cellArraySizes{i}(3:end)};
-                                    celCounter{i}(end+cellArraySizes{i}(1), :) = {cellArraySizes{i}(3:end)};
+                                    cellCounter{i}(end+cellArraySizes{i}(1), :) = {cellArraySizes{i}(3:end)};
                                 else
                                     cellArgs{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
-                                    celCounter{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
+                                    cellCounter{i}((end+cellArraySizes{i}(1)+1):end, :) = [];
                                 end
 
                                 if cellArraySizes{i}(2) > 0
                                     cellArgs{i}(:, end+cellArraySizes{i}(2)) = {cellArraySizes{i}(3:end)};
-                                    celCounter{i}(:, end+cellArraySizes{i}(2)) = {cellArraySizes{i}(3:end)};
+                                    cellCounter{i}(:, end+cellArraySizes{i}(2)) = {cellArraySizes{i}(3:end)};
                                 else
                                     cellArgs{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
-                                    celCounter{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
+                                    cellCounter{i}(:, (end+cellArraySizes{i}(2)+1):end) = [];
                                 end
                             catch ME
                                 logPassed = false;

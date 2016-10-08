@@ -727,13 +727,25 @@ end
 % report back. 
 if ~bError
     fprintf('Please Wait - SoluCheck is Testing...');
+    cellTags = {'uiAAdvancedOptions', 'uiFViewArguments', 'uiPPlots', 'uiEExempt',...
+    'uiDLoadDatabase', 'uiLLoadVariables', 'uiNNotifications', 'uiRMaxMin', ...
+    'uiSArrSize', 'uiVViewer', 'uiHHelp', 'uiWWorkSpace', 'uiBSoluCheck', 'uiPParameters'};
+    cellFigs = cell(size(cellTags));
+    for k = 1:numel(cellTags)
+        cellFigs{k} = findobj('Tag', cellTags{k});
+    end
     % Retrieve ALL of the outputs from SoluCheck Engine, using the
     % arguments we've created above. The Engine is literally called
     % SoluCheckEngine
     [logPassed, strEngineError, intArgNumber, cellFinalArgs, cellAnswers, cellSolutions, vecCodeTime, vecSolnTime, fidAudit] = ...
         SoluCheckEngine(sFileName(1:end-2),sSolutionName(1:end-2), round(intIterations), cDataType, cArgs{:});
     % set the app data as public data:
-    fprintf(' SoluCheck has finished testing. Analyzing Results...\n');
+    for k = cellFigs
+        if ~isempty(k{1})
+            k{1}.HandleVisibility = 'callback'; %#ok<FXSET>
+        end
+    end
+    fprintf(' SoluCheck has finished testing. Analyzing Results...');
     setappdata(hSoluCheck, 'cFinalArgs', cellFinalArgs);
     setappdata(hSoluCheck, 'cAnswers', cellAnswers);
     setappdata(hSoluCheck, 'cSolutions', cellSolutions);
@@ -780,9 +792,9 @@ if ~bError
     % update the UI
     drawnow();
     % assign the variables in the base.
-    assignin('base', 'cArguments', cellFinalArgs);
-    assignin('base', 'cAnswers', cellAnswers);
-    assignin('base', 'cSolutions', cellSolutions);
+    assignin('base', 'cArgs', cellFinalArgs);
+    assignin('base', 'cAns', cellAnswers);
+    assignin('base', 'cSoln', cellSolutions);
     % if we were timing, create the plots for timing;
     if stcSwitches.Timing && numel(vecCodeTime) == intArgNumber
         assignin('base', 'cTiming', {vecCodeTime, vecSolnTime});

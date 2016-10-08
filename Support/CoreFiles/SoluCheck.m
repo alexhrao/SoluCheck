@@ -204,9 +204,7 @@ sOriginalFileName = get(handles.tbBFilePath, 'string');
 if sFilePath ~= 0
     % Tell the user that we are loading the specified file
     set(handles.stBTestResults, 'String', 'Loading...', 'ForegroundColor', 'black', 'Background', [.94 .94 .94]);
-    pause('on');
-    pause(1);
-    pause('off');
+    drawnow();
     cd(sFilePath);
     set(handles.stBFunctionName, 'string', sFileName);
     set(handles.tbBFilePath, 'string', [sFilePath sFileName]);
@@ -780,9 +778,7 @@ if ~bError
         end
     end
     % update the UI
-    pause('on');
-    pause(1/10000);
-    pause('off');
+    drawnow();
     % assign the variables in the base.
     assignin('base', 'cArguments', cellFinalArgs);
     assignin('base', 'cAnswers', cellAnswers);

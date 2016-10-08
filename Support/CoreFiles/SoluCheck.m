@@ -70,21 +70,11 @@ if ~isappdata(hObject, 'stcSwitches')
                          'VariableOut', false, ...
                          'Auditing', false);
     % Create our audio structure:
-    [arrSound1, arrBitRate1] = audioread('Start.mp3');
-    [arrSound2, arrBitRate2] = audioread('Pass1.mp3');
-    [arrSound3, arrBitRate3] = audioread('Pass2.mp3');
-    [arrSound4, arrBitRate4] = audioread('Pass3.mp3');
-    [arrSound5, arrBitRate5] = audioread('Pass4.mp3');
-    [arrSound6, arrBitRate6] = audioread('Fail1.mp3');
-    [arrSound7, arrBitRate7] = audioread('Fail2.mp3');
-    [arrSound8, arrBitRate8] = audioread('Fail3.mp3');
-    [arrSound9, arrBitRate9] = audioread('Error1.mp3');
-    [arrSound10, arrBitRate10] = audioread('Error2.mp3');
-    [arrSound11, arrBitRate11] = audioread('Error3.mp3');
-    stcSounds = struct('Start', {{arrSound1, arrBitRate1}, [], [], []}, ...
-                       'Pass', {{arrSound2, arrBitRate2}, {arrSound3, arrBitRate3}, {arrSound4, arrBitRate4}, {arrSound5, arrBitRate5}}, ...
-                       'Fail', {{arrSound6, arrBitRate6}, {arrSound7, arrBitRate7}, {arrSound8, arrBitRate8}, []}, ...
-                       'Error', {{arrSound9, arrBitRate9}, {arrSound10, arrBitRate10}, {arrSound11, arrBitRate11}, []});
+    stcS = load('audio.mat');
+    stcSounds = struct('Start', {{stcS.arrSound1, stcS.arrBitRate1}, [], [], []}, ...
+                       'Pass', {{stcS.arrSound2, stcS.arrBitRate2}, {stcS.arrSound3, stcS.arrBitRate3}, {stcS.arrSound4, stcS.arrBitRate4}, {stcS.arrSound5, stcS.arrBitRate5}}, ...
+                       'Fail', {{stcS.arrSound6, stcS.arrBitRate6}, {stcS.arrSound7, stcS.arrBitRate7}, {stcS.arrSound8, stcS.arrBitRate8}, []}, ...
+                       'Error', {{stcS.arrSound9, stcS.arrBitRate9}, {stcS.arrSound10, stcS.arrBitRate10}, {stcS.arrSound11, stcS.arrBitRate11}, []});
     % Create the UI Menu:
     uiBSoluCheckMenu = uimenu('Label', 'SoluCheck', 'Accelerator', 'C', 'Tag', 'uiBSoluCheckMenu');
     uiBSoluCheckOutputs = uimenu(uiBSoluCheckMenu, 'Tag', 'uiBSoluCheckOutputs', 'Label', 'Save Outputs...', 'Accelerator', 'S', 'Callback', @uiBSoluCheckMenuSaveOutputs_Callback);

@@ -24,12 +24,12 @@
             evalc([iCounter__SystemVariable{1}, ' = ', ['evalin(''base'', ''', iCounter__SystemVariable{1}, ''');']]);
         end
     end
-    % add 1 so that it represents the ACTUAL iteration number!
+    % Add 1 so that it represents the ACTUAL iteration number!
     intIterationNumber = evalin('caller', 'intIterationNumber') + 1; %#ok<NASGU>
     % Now all of our variables have been defined; now we have to execute the
     % actual code!
     try
-        % have two outputs so that IF there is NO output we don't get a
+        % Have two outputs so that IF there is NO output we don't get a
         % false positive!
         out = eval(strjoin(cellFormula__SystemVariable, '\n'));
     catch ME

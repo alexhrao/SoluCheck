@@ -57,7 +57,7 @@ handles.pbLConfirm.Enable = 'off';
 hSoluCheck = findobj('Tag', 'uiBSoluCheck');
 if isappdata(hSoluCheck, 'cellFileNames')
     cellFileNames = getappdata(hSoluCheck, 'cellFileNames');
-    for i = 1:numel(cellFileNames);
+    for i = 1:numel(cellFileNames)
         hSoluCheck = findobj('Tag', 'uiBSoluCheck');
         hLoadVariables = handles.uiLLoadVariables;
         cstFileName = getappdata(hLoadVariables, 'cstFileName');

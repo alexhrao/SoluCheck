@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="3809147240" file="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development\SoluCheck.prj" location="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development" name="SoluCheck" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2011346892" file="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development\SoluCheck.prj" location="C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Development" name="SoluCheck" target="target.mlapps" target-name="Package App">
     <param.appname>SoluCheck</param.appname>
     <param.authnamewatermark>Alexander Rao</param.authnamewatermark>
     <param.email>solucheck@gmail.com</param.email>
@@ -21,7 +21,7 @@
 &lt;/ul&gt;
 With it's newest upgrade, SoluCheck 2.0 is meaner and leaner than ever before. Quickly and easily test your code against solutions, then drill down to find out exactly where your answers differ from the solution's answers. Precisely specify an exact pattern of arguments for SoluCheck to use to test your code. Do all of this and so much more with SoluCheck, the one and only MATLAB Code Testing Suite you will ever need!</param.description>
     <param.screenshot>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Branding\ScreenShotNew.jpg</param.screenshot>
-    <param.version>2.3.3.6</param.version>
+    <param.version>2.3.4.6</param.version>
     <param.products.name>
       <item>MATLAB</item>
     </param.products.name>
@@ -81,17 +81,6 @@ With it's newest upgrade, SoluCheck 2.0 is meaner and leaner than ever before. Q
     <fileset.resources>
       <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Documentation\SoluCheckDocumentation.pdf</file>
       <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Media\audio.mat</file>
-      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Media\Error1.mp3</file>
-      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Media\Error2.mp3</file>
-      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Media\Error3.mp3</file>
-      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Media\Fail1.mp3</file>
-      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Media\Fail2.mp3</file>
-      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Media\Fail3.mp3</file>
-      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Media\Pass1.mp3</file>
-      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Media\Pass2.mp3</file>
-      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Media\Pass3.mp3</file>
-      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Media\Pass4.mp3</file>
-      <file>C:\Users\alexh\OneDrive\Documents\Personal\Projects\Current\SoluCheck\Support\Media\Start.mp3</file>
     </fileset.resources>
     <fileset.package />
     <build-deliverables>

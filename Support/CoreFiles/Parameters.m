@@ -72,10 +72,10 @@ end
 if stcSwitches.VariableOut
     handles.cbPVariableOutputs.Value = true;
    % Whenever we figure out how to do this, we will put the code here:
-   vecOut = getappdata(hSoluCheck, 'vecOut');
-   vecOut = cellfun(@num2str, num2cell(vecOut), 'uni', false);
-   handles.tbPOutputs.String = strjoin(vecOut, ', ');
-   handles.tbPOutputs.Enable = 'on';
+    vecOut = getappdata(hSoluCheck, 'vecOut');
+    vecOut = cellfun(@num2str, num2cell(vecOut), 'uni', false);
+    handles.tbPOutputs.String = strjoin(vecOut, ', ');
+    handles.tbPOutputs.Enable = 'on';
 else
     handles.cbPVariableOutputs.Value = false;
     % Whenever we figure this out~!
@@ -175,9 +175,9 @@ if handles.cbPVariableInputs.Value
                 setpixelposition(findobj('Tag', 'pbBCancel'), getpixelposition(findobj('Tag', 'pbBCancel')) + [0, (33 .* i), 0, 0]);
             end
         end
-        % tells SoluCheck this is not first time any more!
+        % Tells SoluCheck this is not first time any more!
         bFirstTime = false;
-        % update the UI with complete information:
+        % Update the UI with complete information:
         setappdata(hSoluCheck, 'bFirstTime', bFirstTime);
         % Create starting cell arrays:
         stBArgumentName = cell(1, iNargin);
@@ -187,28 +187,28 @@ if handles.cbPVariableInputs.Value
         stBDivider = cell(1, iNargin);
         % Create the UI Controls:
         for i = 0:iNargin-1
-            %Set the handles for arg names
+            % Set the handles for arg names
             stBArgumentName{i+1} = uicontrol(hSoluCheck, 'Tag', ['stBArgumentName' num2str(i+1)], 'Style', 'text', 'String', sprintf('Argument %d:', i+1), 'FontSize', 10.0);
             setpixelposition(stBArgumentName{i+1}, getpixelposition(findobj('Tag','stBArgumentNameExample')) + [0, (-33 .* i), 0, 0]);
-            %Set handles for arguments
+            % Set handles for arguments
             tbBArgument{i+1} = uicontrol(hSoluCheck, 'Tag', ['tbBArgument' num2str(i+1)], 'Style', 'edit', 'HorizontalAlignment', 'left', 'FontSize', 10.0, 'String', '', ...
                 'ButtonDownFcn', @tbBArgumentExample_ButtonDownFcn, 'KeyPressFcn', @tbBArgument_KeyPressFcn);
             setpixelposition(tbBArgument{i+1}, getpixelposition(findobj('Tag', 'tbBArgumentExample')) + [0, (-33 .* i), 0, 0]);
-            %Set handles for data types
+            % Set handles for data types
             pmBDataType{i+1} = uicontrol(hSoluCheck, 'Tag', ['pmBDataType' num2str(i+1)], 'Style', 'popupmenu', 'String', {'Select A Data Type:', 'Predefined Variable...', 'String', 'Number', 'Array',...
                 'Cell Array','Logical', 'Formulaic...'}, 'FontSize', 10.0, 'Callback', @pmBData_Callback, 'Value', 1);
             setpixelposition(pmBDataType{i+1}, getpixelposition(findobj('Tag', 'pmBDataTypeExample')) + [0, (-33 .* i), 0, 0]);     
-            %Set handles for the step sizes
+            % Set handles for the step sizes
             tbBStepSize{i+1} = uicontrol(hSoluCheck, 'Tag', ['tbBStepSize' num2str(i+1)], 'Style', 'edit', 'String', '1', 'HorizontalAlignment', 'left', 'FontSize', 10.0, ...
                 'String', '1', 'KeyPressFcn', @tbBStepSize_KeyPressFcn);
             setpixelposition(tbBStepSize{i+1}, getpixelposition(findobj('Tag', 'tbBStepExample')) + [0, (-33 .* i), 0, 0]);
-            %Set handles for the dividers
+            % Set handles for the dividers
             stBDivider{i+1} = uicontrol(hSoluCheck, 'Tag', ['stBDivider' num2str(i+1)], 'Style', 'text', 'HorizontalAlignment', 'left', 'string', get(findobj('Tag', 'stBDividerExample'), 'string'), 'FontSize', 4);
             setpixelposition(stBDivider{i+1}, getpixelposition(findobj('Tag', 'stBDividerExample')) + [0, (-33.*i), 0, 0]);
-            %Move the two buttons
+            % Move the two buttons
             setpixelposition(findobj('Tag', 'pbBTest'), getpixelposition(findobj('Tag', 'pbBTest')) + [0, -33, 0, 0]);
             setpixelposition(findobj('Tag', 'pbBCancel'), getpixelposition(findobj('Tag', 'pbBCancel')) + [0, -33, 0, 0]);
-            %adjust the tab order
+            % Adjust the tab order
             uistack(findobj('Tag', 'pbBAdvancedOptions'), 'bottom');
             uistack(findobj('Tag', 'pbBTest'), 'bottom');
             uistack(findobj('Tag', 'pbBCancel'), 'bottom');

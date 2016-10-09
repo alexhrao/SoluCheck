@@ -26,7 +26,7 @@ end
 fclose(fidCode);
 
 [cellLines, ~, ~] = cleanLines(cellLines);
-% function is defined in the first line; need to, however, make sure we
+% Function is defined in the first line; need to, however, make sure we
 % have a function!
 strLine = cellLines{1};
 logFunc = strfind(lower(strLine), 'function');
@@ -36,7 +36,7 @@ if ~logFunc
     return;
 end
 
-% find the end parenthesis sign (this is the end of the function def):
+% Find the end parenthesis sign (this is the end of the function def):
 cellOutArgs = strfind(cellLines, ')');
 for k = 1:numel(cellLines)
     if ~isempty(cellOutArgs{k})
@@ -97,4 +97,3 @@ else
     cellOutArgs = strsplit(strOut, ',');
 end
 end
-    

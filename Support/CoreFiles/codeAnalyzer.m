@@ -28,7 +28,7 @@ end
 fclose(fidCode);
 cellLines = cell(intLines, 1);
 fidCode = fopen(fstCode, 'r');
-for intLine = 1:intLines;
+for intLine = 1:intLines
     cellLines{intLine} = fgetl(fidCode);
 end
 fclose(fidCode);

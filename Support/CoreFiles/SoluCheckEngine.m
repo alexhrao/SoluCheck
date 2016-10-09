@@ -98,7 +98,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
         cd(strFolder);
     end
     
-    % if the details are enabled, then prepare to load results into it!
+    % If the details are enabled, then prepare to load results into it!
     if stcSwitches.Details
         fViewer = findobj('Tag', 'uiVViewer');
         hViewer = guidata(fViewer);
@@ -107,13 +107,13 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
         [intOldLines, ~] = size(strOld);
     end
     
-    % turn the profiler on or off, as indicated:
+    % Turn the profiler on or off, as indicated:
     if stcSwitches.Profiler
         profile('on');
     else
         profile('off');
     end
-    % IF there are max and mins, then get the acceptable ranges
+    % If there are max and mins, then get the acceptable ranges
     if stcSwitches.MaxMin
         cellRanges = getappdata(hSoluCheck, 'celRanges');
     end
@@ -181,7 +181,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                 end
             end
         catch ME
-            % if there was an error, just report back:
+            % If there was an error, just report back:
             strError = sprintf('Database conversion failed! Check case #%d, Input %d\n%s', i, j, ME.message);
             logPassed = false;
             return
@@ -249,7 +249,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                 cellArgs{i} = varArg;
             end
         elseif cellDataType{i} == 1
-            % evaluate in custom workspace, with out equalling the
+            % Evaluate in custom workspace, with out equalling the
             % variable!
             tbBArgument = getappdata(hSoluCheck, 'tbBArgument');
             [varArg, cellError] = customWorkSpace__SystemFunction({['out = ' tbBArgument{i}.String, ';']});
@@ -698,7 +698,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                         if stcSwitches.Exempt
                             for j = 1:length(cellExempt{i})
                                 if isequal(varTest, cellExempt{i}{j})
-                                    % only take the FIRST stand in
+                                    % Only take the FIRST stand in
                                     % value, so that we won't get an
                                     % error!
                                     cellArgs{i}(cellArgs{i}==cellExempt{i}{j}) = cellStandIn{i}{1}(1);
@@ -780,7 +780,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
             objProgressBar.setString(sprintf('%0.02f%%', intIterationNumber / intIterations * 100));
         end
     end
-    % if we passed, update the progress bar:
+    % If we passed, update the progress bar:
     if ishandle(hSoluCheck) && (logPassed || stcSwitches.Auditing)
         objProgressBar.setMaximum(100);
         objProgressBar.setValue(100);

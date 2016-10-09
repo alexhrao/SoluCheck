@@ -28,7 +28,7 @@ for k = vecPosns'
 end
 logCommentBrO = cellfun(@(str)(strcmp(str, '%{')), cellLines);
 logCommentBrC = cellfun(@(str)(strcmp(str, '%}')), cellLines);
-if numel(logCommentBrC) ~= numel(logCommentBrO);
+if numel(logCommentBrC) ~= numel(logCommentBrO)
     cellLines = 'CommentClosureMismatch';
     return;
 end

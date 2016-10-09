@@ -8,6 +8,9 @@ function varargout = SoluCheck(varargin)
 %      contact SoluCheck Services at SoluCheck@gmail.com.
 %
 % See also: AdvancedOptions, SoluCheckEngine
+
+% Exceptions:
+%#ok<*CTCH,*INUSL,*INUSD,*DEFNU>
 hSoluCheck = findall(0, 'Tag', 'uiBSoluCheck');
 if isempty(varargin) && isempty(hSoluCheck)
     fprintf('Loading SoluCheck, Please Wait...');
@@ -36,7 +39,7 @@ end
 
 
 % --- Executes just before SoluCheck is made visible.
-function SoluCheck_OpeningFcn(hObject, eventdata, handles, varargin) %#ok<*INUSL>
+function SoluCheck_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -100,7 +103,7 @@ if ~isappdata(hObject, 'stcSwitches')
     objProgressBar.setBackground(java.awt.Color(1,1,1));
     objProgressBar.setForeground(java.awt.Color(0,.75,0));
     obwProgressBar.Tag = 'objProgressBar';
-    % add our current folder to the path
+    % Add our current folder to the path
     stcAppInfo = matlab.apputil.getInstalledAppInfo;
     for i = 1:numel(stcAppInfo)
         if strcmp(stcAppInfo(i).name, 'SoluCheck')
@@ -108,7 +111,7 @@ if ~isappdata(hObject, 'stcSwitches')
             break
         end
     end
-    % set appropriate data
+    % Set appropriate data
     setappdata(hSoluCheck, 'stcSwitches', stcSwitches);
     setappdata(hSoluCheck, 'stcSounds', stcSounds);
     setappdata(hSoluCheck, 'uiBSoluCheckMenuMute', uiBSoluCheckMenuMute);
@@ -142,7 +145,7 @@ function varargout = SoluCheck_OutputFcn(hObject, eventdata, handles)
 
 varargout{1} = handles.output;
 
-function tbBFilePath_Callback(hObject, eventdata, handles) %#ok<*INUSD,*DEFNU>
+function tbBFilePath_Callback(hObject, eventdata, handles)
 % hObject    handle to tbBFilePath (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -225,8 +228,10 @@ if ~isequal(strFileName, 0)
     % Write the path to our preferences:
     fidInfo = fopen('SoluCheckInfo.txt', 'w');
     strInfo = strjoin(cellInfo{1}, '\n');
-    fprintf(fidInfo, strInfo);
-    fprintf(fidInfo, '\n%s', strFilePath);
+    fprintf(fidInfo, '%s', strInfo);
+    if isempty(strDefault)
+        fprintf(fidInfo, '\n%s', strFilePath);
+    end
     fclose(fidInfo);
     % Tell the user that we are loading the specified file
     set(handles.stBTestResults, 'String', 'Loading...', 'ForegroundColor', 'black', 'Background', [.94 .94 .94]);
@@ -234,7 +239,7 @@ if ~isequal(strFileName, 0)
     cd(strFilePath);
     set(handles.stBFunctionName, 'string', strFileName);
     set(handles.tbBFilePath, 'string', [strFilePath strFileName]);
-    % set the solution file path accordingly:
+    % Set the solution file path accordingly:
     if strcmp(get(handles.tbBSolutionPath, 'string'), 'Select your solution file...')
         set(handles.tbBSolutionPath, 'string', [strFilePath strFileName(1:end-2) '_soln.p']);
         set(handles.tbBSolutionPath, 'string', [strFilePath strFileName(1:end-2) '_soln.p']);
@@ -325,9 +330,9 @@ if ~isequal(strFileName, 0)
             setpixelposition(handles.pbBCancel, getpixelposition(handles.pbBCancel) + [0, (33 .* i), 0, 0]);
         end
     end
-    % tells SoluCheck this is not first time any more!
+    % Tells SoluCheck this is not first time any more!
     bFirstTime = false;
-    % update the UI with complete information:
+    % Update the UI with complete information:
     objProgressBar = getappdata(hSoluCheck, 'objProgressBar');
     objProgressBar.setValue(0);
     objProgressBar.setString('0.00%');
@@ -351,28 +356,28 @@ if ~isequal(strFileName, 0)
         cellInArgs((end+1):iNargin) = {'User-Defined Input'};
     end
     for i = 0:iNargin-1
-        %Set the handles for arg names
+        % Set the handles for arg names
         stBArgumentName{i+1} = uicontrol(handles.uiBSoluCheck, 'Tag', ['stBArgumentName' num2str(i+1)], 'Style', 'text', 'String', sprintf('%d: %s', i+1, cellInArgs{i + 1}), 'FontSize', 10.0);
         setpixelposition(stBArgumentName{i+1}, getpixelposition(handles.stBArgumentNameExample) + [0, (-33 .* i), 0, 0]);
-        %Set handles for arguments
+        % Set handles for arguments
         tbBArgument{i+1} = uicontrol(handles.uiBSoluCheck, 'Tag', ['tbBArgument' num2str(i+1)], 'Style', 'edit', 'HorizontalAlignment', 'left', 'FontSize', 10.0, 'String', '', ...
             'ButtonDownFcn', @tbBArgumentExample_ButtonDownFcn, 'KeyPressFcn', @tbBArgument_KeyPressFcn);
         setpixelposition(tbBArgument{i+1}, getpixelposition(handles.tbBArgumentExample) + [0, (-33 .* i), 0, 0]);
-        %Set handles for data types
+        % Set handles for data types
         pmBDataType{i+1} = uicontrol(handles.uiBSoluCheck, 'Tag', ['pmBDataType' num2str(i+1)], 'Style', 'popupmenu', 'String', {'Select A Data Type:', 'Predefined Variable...', 'String', 'Number', 'Array',...
             'Cell Array','Logical', 'Formulaic...'}, 'FontSize', 10.0, 'Callback', @pmBData_Callback, 'Value', 1);
         setpixelposition(pmBDataType{i+1}, getpixelposition(handles.pmBDataTypeExample) + [0, (-33 .* i), 0, 0]);     
-        %Set handles for the step sizes
+        % Set handles for the step sizes
         tbBStepSize{i+1} = uicontrol(handles.uiBSoluCheck, 'Tag', ['tbBStepSize' num2str(i+1)], 'Style', 'edit', 'String', 'N/A', 'Enable', 'off', 'HorizontalAlignment', 'left', 'FontSize', 10.0, ...
             'KeyPressFcn', @tbBStepSize_KeyPressFcn);
         setpixelposition(tbBStepSize{i+1}, getpixelposition(handles.tbBStepExample) + [0, (-33 .* i), 0, 0]);
-        %Set handles for the dividers
+        % Set handles for the dividers
         stBDivider{i+1} = uicontrol(handles.uiBSoluCheck, 'Tag', ['stBDivider' num2str(i+1)], 'Style', 'text', 'HorizontalAlignment', 'left', 'string', get(handles.stBDividerExample, 'string'), 'FontSize', 4);
         setpixelposition(stBDivider{i+1}, getpixelposition(handles.stBDividerExample) + [0, (-33.*i), 0, 0]);
-        %Move the two buttons
+        % Move the two buttons
         setpixelposition(handles.pbBTest, getpixelposition(handles.pbBTest) + [0, -33, 0, 0]);
         setpixelposition(handles.pbBCancel, getpixelposition(handles.pbBCancel) + [0, -33, 0, 0]);
-        %adjust the tab order
+        % Adjust the tab order
         uistack(handles.pbBAdvancedOptions, 'bottom');
         uistack(handles.pbBTest, 'bottom');
         uistack(handles.pbBCancel, 'bottom');
@@ -491,18 +496,19 @@ else
     strDefault = '';
 end
 stcSwitches = getappdata(findobj('Tag', 'uiBSoluCheck'), 'stcSwitches');
-% only show p files!
+% Only show .p files!
 [strSolnName, strSolnPath] = uigetfile({'*.p', 'P-Files'}, 'Select your solution file:', strDefault);
-% if ALL of them are 0, then we need to cancel
-if ~isequal(strSolnName, 0)
+if isequal(strSolnName, 0)
     set(handles.tbBSolutionPath, 'string', 'Select your solution file...');
 else
     fidInfo = fopen('SoluCheckInfo.txt', 'w');
     strInfo = strjoin(cellInfo{1}, '\n');
-    fprintf(fidInfo, strInfo);
-    fprintf(fidInfo, '\n%s', [strSolnPath strSolnName]);
+    fprintf(fidInfo, '%s', strInfo);
+    if isempty(strDefault)
+        fprintf(fidInfo, '\n%s', strSolnPath);
+    end
     fclose(fidInfo);
-    % otherwise, set the string!
+    % Otherwise, set the string!
     set(handles.tbBSolutionPath, 'string', [strSolnPath strSolnName]);
     setappdata(findobj('Tag', 'uiBSoluCheck'), 'sSolutionPath', strSolnPath);
     setappdata(findobj('Tag', 'uiBSoluCheck'), 'sSolutionName', strSolnName);
@@ -551,7 +557,7 @@ function pbBCancel_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% if we are not testing, simply exit SoluCheck. If we ARE testing, however,
+% If we are not testing, simply exit SoluCheck. If we ARE testing, however,
 % tell the engine that it's time to stop!
 if strcmp(hObject.String, 'Done')
     close;
@@ -621,8 +627,9 @@ else
         cDataType{i} = get(pmBDataType{i}, 'value') - 1;
         switch cDataType{i}
             case 0
-                % if it is 0, then the user done messed up. Return with
-                % error and log to viewer, if possible:
+                % If it is 0, then the user messed up. Return with an
+                % error and log to viewer, if possible. Technically, this
+                % shouldn't be possible, but whatever.
                 bError = true;
                 strError = [strError sprintf('Argument #%d: The Data type must be defined!', i)]; %#ok<AGROW>
             case 1
@@ -634,7 +641,7 @@ else
                 catch ME
                     bError = true;
                     if strcmp(ME.identifier, 'MATLAB:UndefinedFunction')
-                        % if the variable is NOT defined, say so (though
+                        % If the variable is NOT defined, say so (though
                         % this should never be able to happen! Oh, except
                         % if user clears data!
                         strError = [strError sprintf('Argument #%d: The variable is not currently defined.\n', i)];    %#ok<AGROW>
@@ -647,15 +654,15 @@ else
                     % Try to create a string array:
                     ctbBArgument{i} = char(ctbBArgument{i});
                     [ctbBArgument{i}, ~] = strtok(ctbBArgument{i}, '''');
-                    % check if this created any NaN values?
+                    % Check if this created any NaN values?
                     if any(any(isnan(ctbBArgument{i})))
                         bError = true;
-                        % if there is a NaN, say so!
+                        % If there is a NaN, say so!
                         strError = [strError sprintf('Argument #%d: Conversion to class %s resulted in a null value.\n', i, cClass{2})];  %#ok<AGROW>
                     end
-                catch %#ok<*CTCH>
+                catch
                     bError = true;
-                    % if we error out, say so!
+                    % If we error out, say so!
                     strError = [strError sprintf('Argument #%d: Conversion to class %s failed.\n', i, cClass{2})];   %#ok<AGROW>
                 end
             case 3
@@ -663,39 +670,39 @@ else
                     % Try to create a STATIC number from the argument!
                     ctbBArgument{i} = str2double(ctbBArgument{i});
                     if isempty(ctbBArgument{i}) || any(any(isnan(ctbBArgument{i})))
-                        % if NaN OR Empty (subject for further review),
+                        % If NaN OR Empty (subject for further review),
                         % then say so!
                         bError = true;
                         strError = [strError sprintf('Argument #%d: Conversion to class %s resulted in a null value.\n', i, cClass{3})];    %#ok<AGROW>
                     end
                 catch
-                    % if we error out, say so!
+                    % If we error out, say so!
                     bError = true;
                     strError = [strError sprintf('Argument #%d: Conversion to class %s failed.\n', i, cClass{3})];  %#ok<AGROW>
                 end
             case 4
                 try
-                    % try to make an array; this will literally just
+                    % Try to make an array; this will literally just
                     % evaluate the given arguments. Kind of unsafe, but I
                     % have no better way to do this!
                     ctbBArgument{i} = eval(ctbBArgument{i});
                     if any(any(isnan(ctbBArgument{i})))
-                        % if we get NaN values, say so!
+                        % If we get NaN values, say so!
                         bError = true;
                         strError = [strError sprintf('Argument #%d: Conversion to class %s resulted in a NaN value.\n', i, cClass{4})];    %#ok<AGROW>
                     end
                     if isempty(ctbBArgument{i})
-                        % if it is empty, say so!
+                        % If it is empty, say so!
                         strError = [strError sprintf('Argument #%d: Conversion to class %s resulted in a null value.\n', i, cClass{4})];    %#ok<AGROW>
                     end
                 catch
-                    % if we error out, say so!
+                    % If we error out, say so!
                     bError = true;
                     strError = [strError sprintf('Argument #%d: Conversion to class %s failed.\n', i, cClass{4})];   %#ok<AGROW>
                 end
             case 5
                 try
-                    % try to evaluate a cell array, if we get a non-cell
+                    % Try to evaluate a cell array, if we get a non-cell
                     % array, say so!
                     ctbBArgument{i} = eval(ctbBArgument{i});
                     if ~iscell(ctbBArgument{i})
@@ -707,12 +714,12 @@ else
                         strError = [strError sprintf('Argument #%d: A cell array was detected and was not stepped.\n', i)]; %#ok<AGROW>
                     end
                 catch
-                    % if we error, say so!
+                    % If we error, say so!
                     bError = true;
                     strError = [strError sprintf('Argument #%d: Conversion to class %s failed.\n', i, cClass{5})];    %#ok<AGROW>
                 end
             case 6
-                % if we have a logical vector, evaluate the string, then
+                % If we have a logical vector, evaluate the string, then
                 % convert ot logical. IF IT IS NOT A LOGICAL, THROW AN
                 % ERROR!
                 try
@@ -722,24 +729,24 @@ else
                         strError = [strError sprintf('Argument #%d: No logical vector detected. Please enter it in the form of either [1 0 ...] or [true, false, ...]\n', i)];  %#ok<AGROW>
                     end
                 catch
-                    % if we error, say so!
+                    % If we error, say so!
                     bError = true;
                     strError = [strError sprintf('Argument #%d: Conversion to class %s failed.\n', i, cClass{7})];      %#ok<AGROW>
                 end
             case 7
                 try
-                    % just say that we have a stored formula; this will be
+                    % Just say that we have a stored formula; this will be
                     % dynamically redefined in SoluCheck Engine!
                     ctbBArgument{i} = 'Stored Formula';
                     strError = [strError sprintf('Argument #%d: A Formulaic Entry was detected and was not stepped.\n', i)];    %#ok<AGROW>
                 catch ME
-                    % if we somehow error, say so (I guess. This should
+                    % If we somehow error, say so (I guess. This should
                     % never happen).
                     bError = true;
                     strError = [strError sprintf('Argument #%d: Unable to evaluate formula. Error Message:\n%s\n', i, ME.message)]; %#ok<AGROW>
                 end
             otherwise
-                % if we have exhausted all cases, and we somehow get a
+                % If we have exhausted all cases, and we somehow get a
                 % larger number, say that we have NO idea what happened
                 bError = true;
                 strError = [strError sprintf('Argument #%d: Undefined data type.\n', i)]; %#ok<AGROW>
@@ -749,24 +756,24 @@ else
         if strcmp(ctbBStepSize{i}, '0') || isempty(ctbBStepSize) || strcmp(ctbBStepSize{i}, 'N/A')
             ctbBStepSize{i} = 'N/A';
         else
-            % otherwise, just convert it to a number!
+            % Otherwise, just convert it to a number!
             ctbBStepSize{i} = str2double(ctbBStepSize{i});
         end
-        % create our dividers
+        % Create our dividers
         cstBDivider{i} = get(stBDivider{i}, 'string');
-        % store our cell array of arguments to be passed to SoluCheck:
+        % Store our cell array of arguments to be passed to SoluCheck:
         cArgs{2 .* i -1} = ctbBArgument{i};
         cArgs{2 .* i} = ctbBStepSize{i};
     end
 end
-% create our iterations; if it does not work, say so!
+% Create our iterations; if it does not work, say so!
 try
     intIterations = str2double(handles.tbBIterations.String);
 catch
     bError = true;
     strError = [strError sprintf('Iteration Amount: Please enter a number!')];
 end
-% check if the iteration number is less than 0 or infinity; act accordingly
+% Check if the iteration number is less than 0 or infinity; act accordingly
 if intIterations == inf || intIterations <= 0 || isnan(intIterations)
     bError = true;
     strError = [strError sprintf('Iteration Amount: Please enter a positive, finite entry!\n')];
@@ -789,7 +796,7 @@ if ~bError
     % SoluCheckEngine
     [logPassed, strEngineError, intArgNumber, cellFinalArgs, cellAnswers, cellSolutions, vecCodeTime, vecSolnTime, fidAudit] = ...
         SoluCheckEngine(sFileName(1:end-2),sSolutionName(1:end-2), round(intIterations), cDataType, cArgs{:});
-    % set the app data as public data:
+    % Set the app data as public data:
     for k = cellFigs
         if ~isempty(k{1})
             k{1}.HandleVisibility = 'callback'; %#ok<FXSET>
@@ -799,20 +806,20 @@ if ~bError
     setappdata(hSoluCheck, 'cFinalArgs', cellFinalArgs);
     setappdata(hSoluCheck, 'cAnswers', cellAnswers);
     setappdata(hSoluCheck, 'cSolutions', cellSolutions);
-    % set the string for iteration number!
+    % Set the string for iteration number!
     if intArgNumber == 1
         sArgNumber = '1 iteration';
     else
         sArgNumber = sprintf('%d iterations', intArgNumber);
     end
-    % if we are testing plots, retrieve the plot data, and alert the user:
+    % If we are testing plots, retrieve the plot data, and alert the user:
     if stcSwitches.PlotTesting
         vecPercents = getappdata(handles.uiBSoluCheck, 'vecPlotAverage');
         strError = [strError sprintf('Average Plot Difference: %0.4f%%', (mean(vecPercents) / numel(vecPercents)) * 100)];
     end
     % ONLY do the following things IF WE PASSED
     if logPassed
-        % tell the user we passed; play audio
+        % Tell the user we passed; play audio
         strResult = sprintf(['We have successfully tested your function. Using %s, we found no disagreements between your function and the given solution file.\nTest Passed!'...
             '\nAlerts Generated:\n%s'], sArgNumber, strError);
         set(handles.stBTestResults, 'string', strResult, 'BackgroundColor', 'Green', 'ForegroundColor', 'black');
@@ -821,7 +828,7 @@ if ~bError
             sound(stcSounds(intChoice).Pass{:});
         end
     elseif isempty(strEngineError)
-            % tell the user that they failed! Play the sound as well.
+        % Tell the user that they failed! Play the sound as well.
         strResult = sprintf(['We have successfully tested your function, and we found a disagreement. The iteration number was %d, and the arguments used for this iteration, '...
             'as well as your answers and the solutions, have been output to the command line.\nTest Failed!\nAlerts Generated:\n%s'], intArgNumber, strError);
         set(handles.stBTestResults, 'string', strResult, 'BackgroundColor', 'Red', 'ForegroundColor', 'white');
@@ -830,7 +837,7 @@ if ~bError
             sound(stcSounds(intChoice).Fail{:});
         end
     else
-        % tell the user we ERRORED; this DOES NOT (necessarily) MEAN A
+        % Tell the user we ERRORED; this DOES NOT (necessarily) MEAN A
         % FAILURE! Play the audio as well.
         strResult = sprintf('We were unsuccessful in testing the functions; Here''s the error message that was last produced:\n%s\nTest Error!', strEngineError);
         set(handles.stBTestResults, 'string', strResult, 'BackgroundColor', 'Yellow', 'ForegroundColor', 'black');
@@ -839,13 +846,13 @@ if ~bError
             sound(stcSounds(intChoice).Error{:});
         end
     end
-    % update the UI
+    % Update the UI
     drawnow();
-    % assign the variables in the base.
+    % Assign the variables in the base.
     assignin('base', 'cArgs', cellFinalArgs);
     assignin('base', 'cAns', cellAnswers);
     assignin('base', 'cSoln', cellSolutions);
-    % if we were timing, create the plots for timing;
+    % If we were timing, create the plots for timing;
     if stcSwitches.Timing && numel(vecCodeTime) == intArgNumber
         assignin('base', 'cTiming', {vecCodeTime, vecSolnTime});
         uiPPlots = figure('Tag', 'uiPPlots', 'ToolBar', 'none', 'MenuBar', 'None', 'Name', 'SoluCheck Code Analyzer', 'NumberTitle', 'off');
@@ -854,16 +861,16 @@ if ~bError
         title(sprintf('SoluCheck Code Analyzer: %s', sFileName));
         xlabel('Number of Iterations');
         ylabel('Time to compute, in seconds');
-        % give the user the ability to save the results!
+        % Give the user the ability to save the results!
         pbPSave = uicontrol(uiPPlots, 'Style', 'pushbutton', 'String', 'Save', 'Callback', @pbPSave_Callback, 'FontSize', 10.0, 'HorizontalAlignment', 'center', 'Units', 'Normalized');
         uiPPlotsPosn = getpixelposition(uiPPlots);
         setpixelposition(pbPSave, [uiPPlotsPosn(3) - 40, 0, 40, 30]);
     end
-    % open our profiler, if need be:
+    % Open our profiler, if need be:
     if stcSwitches.Profiler
         profile('viewer');
     end
-    % publish our file, if need be!
+    % Publish our file, if need be:
     if fidAudit ~= -1
         fclose(fidAudit);
         fidAudit = publish([cd '\auditFile.m'], struct('outputDir', cd, 'evalCode', false));
@@ -871,7 +878,7 @@ if ~bError
         web(fidAudit, '-browser');
     end
 else
-    % if we errored out DURING THE CONVERSION PROCESS (NOT IN THE ENGINE),
+    % If we errored out DURING THE CONVERSION PROCESS (NOT IN THE ENGINE),
     % do NOT run the engine; report back IMMEDIATELY!
     strResult = sprintf('There were one or more errors in your arguments. Please try again. Details:\n%s', strError);
     set(handles.stBTestResults, 'string', strResult, 'BackgroundColor', 'Yellow', 'ForegroundColor', 'black');
@@ -880,7 +887,7 @@ else
         sound(stcSounds(intChoice).Error{:})
     end
 end
-% if the user wanted to be notified, send the email:
+% If the user wanted to be notified, send the email:
 if stcSwitches.Notifications
     cOldPrf = getappdata(handles.uiBSoluCheck, 'cOldPrf');
     cNewPrf = getappdata(handles.uiBSoluCheck, 'cNewPrf');
@@ -892,7 +899,7 @@ if stcSwitches.Notifications
         strResult = sprintf('Failed!\nDetails:\n\n%s', strResult);
     end
     try
-        % send the emails!
+        % Send the emails!
         if cNewPrf{4}
             save('results.mat', 'cellFinalArgs', 'cellAnswers', 'cellSolutions', 'vecCodeTime', 'vecSolnTime');
             sendmail(cNewPrf{3}, 'SoluCheck Complete!', sprintf('Dear %s,\n\nSoluCheck has finished testing your code. Your code %s\n\nThe SoluWorks Team', [cNewPrf{1} ' ' cNewPrf{2}], strResult), 'results.mat');
@@ -900,11 +907,11 @@ if stcSwitches.Notifications
             sendmail(cNewPrf{3}, 'SoluCheck Complete!', sprintf('Dear %s,\n\nSoluCheck has finished testing your code. Your code %s\n\nThe SoluWorks Team', [cNewPrf{1} ' ' cNewPrf{2}], strResult));
         end
     catch ME
-        % tell the user if we failed to send the notification
+        % Tell the user if we failed to send the notification
         msgbox(sprintf('Notification Failed!\n\nError:\n%s\n%s', ME.identifier, ME.message))
     end
     try
-        % reset the preferences; this is prone to errors, and I think that
+        % Reset the preferences; this is prone to errors, and I think that
         % it *might* be due to if the user never set these properties.
         if cNewPrf{4}
             prfRecycleState = recycle;
@@ -912,7 +919,7 @@ if stcSwitches.Notifications
             delete('results.mat');
             recycle(prfRecycleState);
         end
-        % set the properties, as per what was previously entered:
+        % Set the properties, as per what was previously entered:
         setpref('Internet', 'SMTP_Server', cOldPrf{1});
         setpref('Internet','E_mail', cOldPrf{2});
         setpref('Internet','SMTP_Username', cOldPrf{2});
@@ -925,7 +932,7 @@ if stcSwitches.Notifications
         msgbox('Your message was sent, but we ran into problems reverting back to the old settings.\n');
     end
 end
-% if we have details to log, log them!
+% If we have details to log, log them!
 if stcSwitches.Details
     hViewer = findobj('Tag', 'uiVViewer');
     hViewer = hViewer.Children(3);
@@ -940,18 +947,18 @@ if stcSwitches.Details
     set(hViewer, 'String', strjoin(cellViewer, '\n'));
 end
 fprintf(' Analyzed!\n');
-% tell the user that we are completely done!
+% Tell the user that we are completely done!
 set(handles.pbBCancel, 'String', 'Done');
 
 function pbBTest_KeyPressFcn(hObject, eventdata, handles)
-% run the Test Module for key presses
+% Run the Test Module for key presses
 handles = guidata(hObject);
 if any(strcmp({' ', 'return'}, eventdata.Key)) && strcmp(handles.pbBTest.Enable, 'on')
     pbBTest_Callback(handles.pbBTest, [], handles);
 end
 
 function pbBCancel_KeyPressFcn(hObject, eventdata, handles)
-% run the cancel callback, for key presses:
+% Run the cancel callback, for key presses:
 handles = guidata(hObject);
 if any(strcmp({' ', 'return'}, eventdata.Key))
     pbBCancel_Callback(handles.pbBCancel, [], handles);
@@ -1007,7 +1014,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 function tbBArgumentExample_ButtonDownFcn(hObject, eventdata, handles)
-% if we click the argument text box, we *might* need to do something; here
+% If we click the argument text box, we *might* need to do something; here
 % we figure out what to do!
 hSoluCheck = findobj('Tag', 'uiBSoluCheck');
 tbBArgument = getappdata(hSoluCheck, 'tbBArgument');
@@ -1028,12 +1035,12 @@ if ~strcmp(hObject.Enable, 'on')
         pbCCancel = uicontrol('Style', 'pushbutton', 'String', 'Cancel', 'position', [0, 0, 250, 50], 'Callback', {@pbCCancel_Callback, hObject.Tag}, 'Units', 'Normalized'); %#ok<NASGU>
         uiCCommandWindow.Visible = 'on';
         uiCCommandWindow.WindowStyle = 'modal';
-        %make the window visible and add our code!
+        % Make the window visible and add our code!
         cellFormulaic{intArgument}{1} = ['>> ' cellFormulaic{intArgument}{1}];
         tbCCommandLine.String = strjoin(cellFormulaic{intArgument}, '\n');
         setappdata(hSoluCheck, 'tbCCommandLine', tbCCommandLine);
     elseif pmBDataType{intArgument}.Value == 2
-        % if the value is 2, then we have a predefined variable; reload the
+        % If the value is 2, then we have a predefined variable; reload the
         % predefined variable list!
         cellVariables = evalin('base', 'who');
         if stcSwitches.LoadVariables
@@ -1052,7 +1059,7 @@ if ~strcmp(hObject.Enable, 'on')
         vecPosn = getpixelposition(uiWWorkSpace);
         vecPosn(1:2) = 0;
         setpixelposition(lbWVariables, vecPosn);
-        %set the correct pixel positions, and make it visible!
+        % Set the correct pixel positions, and make it visible!
         uiWWorkSpace.Visible = 'on';
         uiWWorkSpace.WindowStyle = 'modal';
         set(tbBArgument{intArgument}, 'Enable', 'inactive');
@@ -1114,10 +1121,10 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
     
 function pmBData_Callback(hObject, callbackdata)
-% when we select a choice, work accordingly!
+% When we select a choice, work accordingly!
 hSoluCheck = findobj('Tag', 'uiBSoluCheck');
 hpbBTest = findobj('Tag', 'pbBTest');
-% load in our textboxes and pop up menus, and get starting variables
+% Load in our textboxes and pop up menus, and get starting variables
 tbBArgument = getappdata(hSoluCheck, 'tbBArgument');
 pmBDataType = getappdata(hSoluCheck, 'pmBDataType');
 tbBStepSize = getappdata(hSoluCheck, 'tbBStepSize');
@@ -1126,7 +1133,7 @@ intName = str2double(strName(12:end));
 iNargin = getappdata(hSoluCheck, 'iNargin');
 stcSwitches = getappdata(hSoluCheck, 'stcSwitches');
 if hObject.Value == 8
-    % if we have a formulaic entry (8), work accordingly (as shown above):
+    % If we have a formulaic entry (8), work accordingly (as shown above):
     uiCCommandWindow = figure('Visible', 'on', 'Name', ['SoluCheck: Formulaic Entry #', ...
         strName(12:end)], 'NumberTitle', 'off', 'position', [350 50 500 550], 'Tag', 'uiCCommandWindow',...
         'WindowStyle', 'modal', 'CloseRequestFcn', {@pbCCancel_Callback, hObject.Tag}, 'MenuBar', 'none');
@@ -1141,7 +1148,7 @@ if hObject.Value == 8
     set(tbBArgument{intName}, 'Enable', 'inactive');
     setappdata(hSoluCheck, 'tbCCommandLine', tbCCommandLine);
 elseif hObject.Value == 2
-    % if we have a predefined variable (2), work accordingly (as shown
+    % If we have a predefined variable (2), work accordingly (as shown
     % above):
     cellVariables = evalin('base', 'who')';
     if stcSwitches.LoadVariables
@@ -1169,7 +1176,7 @@ else
     % Otherwise, just make sure the text box is enabled:
     set(tbBArgument{intName}, 'Enable', 'on');
 end
-% if the value is 1, 2, 6, or 8 (Undefined, Predefined, Cell Array, or
+% If the value is 1, 2, 6, or 8 (Undefined, Predefined, Cell Array, or
 % Formulaic), then DO NOT allow a step size! Otherwise, we should.
 switch hObject.Value
     case {1}
@@ -1183,7 +1190,7 @@ switch hObject.Value
         end
         set(tbBStepSize{intName}, 'Enable', 'on');
 end
-% allow testing by default, but if any of the other pop up menus are not
+% Allow testing by default, but if any of the other pop up menus are not
 % ready, then DISABLE testing!
 set(hpbBTest, 'Enable', 'on');
 for i = 1:iNargin
@@ -1208,7 +1215,7 @@ if strcmp(tbBArgument{str2double(strName(12:end))}.String, '')
 end
 
 function pbCConfirm_Callback(hObject, callbackdata, strName)
-% write our formulaic data to the cell array for evaluation within the
+% Write our formulaic data to the cell array for evaluation within the
 % Engine itself!
 tbBArgument = getappdata(findobj('Tag', 'uiBSoluCheck'), 'tbBArgument');
 tbCCommandLine = getappdata(findobj('Tag', 'uiBSoluCheck'), 'tbCCommandLine');
@@ -1227,16 +1234,17 @@ for i = 2:intLines
 end
 intArgument = str2double(strName(12:end));
 cellFormulaic{intArgument} = cellCode;
-% this code is no longer useful, as of now, at least.
-% what if we instead STORE the code in the app? Then it could be evaluated
-% every time!!!!
-% To do this, we would need to have standardized method for storing data!
-% We would also need to open the engine, but we will deal with that later.
-% Our naming method: 
-% strResult = evalc(strjoin(cellCode, '\n'));
-% [~, strResult] = strtok(strResult, '=');
-% [~, strResult] = strtok(strResult, ' =');
-% strResult = strtok(strResult);
+% This is my previous ideas. No longer useful!
+% % This code is no longer useful, as of now, at least.
+% % What if we instead STORE the code in the app? Then it could be evaluated
+% % every time!!!!
+% % To do this, we would need to have standardized method for storing data!
+% % We would also need to open the engine, but we will deal with that later.
+% % Our naming method: 
+% % strResult = evalc(strjoin(cellCode, '\n'));
+% % [~, strResult] = strtok(strResult, '=');
+% % [~, strResult] = strtok(strResult, ' =');
+% % strResult = strtok(strResult);
 setappdata(findobj('Tag', 'uiBSoluCheck'), 'cellFormulaic', cellFormulaic);
 set(tbBArgument{intArgument}, 'String', 'Stored Formula:');
 delete(hObject.Parent);
@@ -1265,7 +1273,7 @@ function uiBSoluCheck_SizeChangedFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 hSoluCheck = findobj('Tag', 'uiBSoluCheck');
-% if we are first starting, set the starting variables:
+% If we are first starting, set the starting variables:
 if ~isappdata(hSoluCheck, 'vecOldSize')
     vecOldSize = getpixelposition(hSoluCheck);
     vecOldSize = vecOldSize(3:4);
@@ -1277,7 +1285,7 @@ if ~isappdata(hSoluCheck, 'bFirstTime')
 else
     bFirstTime = getappdata(hSoluCheck, 'bFirstTime');
 end
-% get all the data that we need. Of note; if this is run FOR THE FIRST
+% Get all the data that we need. Of note; if this is run FOR THE FIRST
 % TIME, iNargin is empty, and so is cell names; thus, none of this code is
 % really run.
 vecSize = getpixelposition(hSoluCheck);
@@ -1291,18 +1299,18 @@ tbBArgument = getappdata(hSoluCheck, 'tbBArgument');
 pmBDataType = getappdata(hSoluCheck, 'pmBDataType');
 tbBStepSize = getappdata(hSoluCheck, 'tbBStepSize');
 stBDivider = getappdata(hSoluCheck, 'stBDivider');
-% get the new position, and set the new size:
+% Get the new position, and set the new size:
 vecPosition = getpixelposition(hObject);
 vecNewSize = vecPosition(3:4);
-% get the difference: we DO NOT view x coordinate changes!
+% Get the difference: we DO NOT view x coordinate changes!
 vecDifference = [0, (vecNewSize(2)-vecOldSize(2)), 0, 0];
-% get the names of our handles, and add the objProgressBar to it!
+% Get the names of our handles, and add the objProgressBar to it!
 cellNames = fieldnames(handles)';
 cellNames = [cellNames, {'objProgressBar'}];
 cellFields = {stBArgumentName, tbBArgument, pmBDataType, tbBStepSize, stBDivider};
 cellReserved = {'pbBAdvancedOptions', 'pbBHelp', 'cbBMute', 'output', 'uiBSoluCheck', ...
     'objProgressBar', 'stBTestResults', 'cxBAudit'};
-% for each of the names, if it is NOT one of the reserved tags, move it
+% For each of the names, if it is NOT one of the reserved tags, move it
 % accordingly
 for i = 1:length(cellNames)
     if ~any(strcmp(cellNames{i}, cellReserved))
@@ -1310,7 +1318,7 @@ for i = 1:length(cellNames)
         setpixelposition(k, getpixelposition(k) + vecDifference);
     end
 end
-% for each field, set the pixel position IF WE ARE NOT ON THE FIRST TIME
+% For each field, set the pixel position IF WE ARE NOT ON THE FIRST TIME
 if ~bFirstTime
     for i = 1:length(cellFields)
         for j = 1:iNargin
@@ -1324,14 +1332,14 @@ vecPosn = getpixelposition(stBViewingPane);
 if all(vecPosn + [0 0 0 vecDifference(2)] > 0)
     setpixelposition(stBViewingPane, vecPosn + [0 0 0 vecDifference(2)]);
 end
-% get the slider position; this is for resizing the scroller
+% Get the slider position; this is for resizing the scroller
 vecSliderPosn = getpixelposition(handles.slBYScroller);
 vecTopPosn = getpixelposition(handles.stBTop);
 vecNewPosn = [vecSliderPosn(1), 0, vecSliderPosn(3), vecTopPosn(2)];
-% find the change needed for the slider;
+% Find the change needed for the slider;
     setpixelposition(handles.slBYScroller, vecNewPosn);
 vecTestButtonPosn = getpixelposition(handles.pbBTest);
-% if the test button is ABOVE the y = 0 line, then make it invisible.
+% If the test button is ABOVE the y = 0 line, then make it invisible.
 % Otherwise, show it!
 if vecTestButtonPosn(2) >= 0
     set(handles.slBYScroller, 'Visible', 'off');
@@ -1358,14 +1366,15 @@ else
     set(handles.slBYScroller, 'Visible', 'on', 'Max', abs(vecTestButtonPosn(2)), 'Value', abs(vecTestButtonPosn(2)));
 end
 
-% 
+% This is code that is no longer useful:
 % if vecTestButtonPosn(2) >= 0
 %     set(handles.slBYScroller, 'Max', 1.0, 'Min', 1.0, 'Value', 0.0);
 % else
 %     set(handles.slBYScroller, 'Min', 0.00, 'Max', abs(vecTestButtonPosn(2)), 'Value', abs(vecTestButtonPosn(2)));
 %     intScrollerValue = abs(vecTestButtonPosn(2));
 % end
-% reload our old size to reflect the new old size!
+
+% Reload our old size to reflect the new old size!
 vecOldSize = vecNewSize;
 setappdata(findobj('Tag', 'uiBSoluCheck'), 'vecOldSize', vecOldSize);
 
@@ -1374,7 +1383,7 @@ function slBYScroller_Callback(hObject, eventdata, handles)
 % hObject    handle to slBYScroller (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% get starting values
+% Get starting values
 hSoluCheck = findobj('Tag', 'uiBSoluCheck');
 iNargin = getappdata(hSoluCheck, 'iNargin');
 intScrollerValue = getappdata(hSoluCheck, 'intScrollerValue');
@@ -1387,11 +1396,11 @@ bFirstTime = getappdata(findobj('Tag', 'uiBSoluCheck'), 'bFirstTime');
 if isempty(intScrollerValue)
     intScrollerValue = get(hObject, 'Max');
 end
-% define the top of our slider:
+% Define the top of our slider:
 intTop = getpixelposition(handles.stBTop);
 celNames = {stBArgumentName, tbBArgument, pmBDataType, tbBStepSize, stBDivider};
 intDifference = -(get(hObject, 'Value') - intScrollerValue);
-% if this is NOT our first time, reload the uiControls!
+% If this is NOT our first time, reload the uiControls!
 if ~bFirstTime
     for i = 1:length(celNames)
         for j = 1:iNargin
@@ -1435,7 +1444,7 @@ function uiBSoluCheck_WindowScrollWheelFcn(hObject, eventdata, handles)
 %	VerticalScrollAmount: number of lines scrolled for each click
 % handles    structure with handles and user data (see GUIDATA)
 
-% basically, load the uicontrols just like in the scroller function!
+% Basically, load the uicontrols just like in the scroller function!
 bFirstTime = getappdata(findobj('Tag', 'uiBSoluCheck'), 'bFirstTime');
 hSoluCheck = findobj('Tag', 'uiBSoluCheck');
 iNargin = getappdata(hSoluCheck, 'iNargin');
@@ -1463,9 +1472,9 @@ end
 celFields = {stBArgumentName, tbBArgument, pmBDataType, tbBStepSize, stBDivider};
 
 if ~bFirstTime && vecPosn(2) < 0
-    %Don't scroll if the y posn is not less than 0!!
-    %Also, if we WOULD scroll past the end, we need to just go to the end;
-    %not pass it!!!!
+    % Don't scroll if the y posn is not less than 0!!
+    % Also, if we WOULD scroll past the end, we need to just go to the end;
+    % not pass it!!!!
     % We need to find the distance to the end (pbBTest = 0), then apply
     % this to the given formula
     for i = 1:length(celFields)
@@ -1496,12 +1505,12 @@ function cbBMute_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of cbBMute
-% this is vestigial; eventually, it will be replaced exclusively by the
+% This is vestigial; It has been replaced exclusively by the
 % uimenu option!
 
 function uiBSoluCheckMenuSaveOutputs_Callback(hObject, eventdata, handles)
 hSoluCheck = findobj('Tag', 'uiBSoluCheck');
-% save our ouputs from the LAST run!
+% Save our ouputs from the LAST run!
 if isappdata(hSoluCheck, 'cFinalArgs')
     cellFinalArgs = getappdata(hSoluCheck, 'cFinalArgs'); %#ok<NASGU>
     cellFinalCode = getappdata(hSoluCheck, 'cAnswers'); %#ok<NASGU>
@@ -1514,7 +1523,7 @@ if isappdata(hSoluCheck, 'cFinalArgs')
 end
 
 function uiBSoluCheckMenuSaveDetails_Callback(hObject, eventdata, handles)
-% save our details screen, as it is shown at the moment this function is
+% Save our details screen, as it is shown at the moment this function is
 % called!
 hViewer = findobj('Tag', 'uiVViewer');
 hViewer = hViewer.Children(3);
@@ -1539,7 +1548,7 @@ function uiBSoluCheckMenuPrep_Callback(hObject, eventdata, ~)
     dos(['explorer ' strPath]);
     
 function uiBMenuMute_Callback(hObject, eventdata, ~)
-% eventually, changing the check box for mute will NOT be needed!
+% Eventually, changing the check box for mute will NOT be needed!
 handles = guidata(findobj('Tag', 'uiBSoluCheck'));
 if strcmp(hObject.Checked, 'on')
     handles.cbBMute.Value = false;
@@ -1551,15 +1560,15 @@ end
 
 
 function uiBSoluCheckMenuQuit_Callback(hObject, eventdata, handles)
-% quit SoluCheck!
+% Quit SoluCheck!
 close(findobj('Tag', 'uiBSoluCheck'));
 
 function uiBDocumentation_Callback(hObject, eventdata, handles)
-% open the documentation
+% Open the documentation
 winopen('SoluCheckDocumentation.pdf');
 
 function uiBSoluCheckMenuUninstall_Callback(hObject, eventdata, handles)
-% prompt the user for confirmation, then if yes, uninstall SoluCheck!
+% Prompt the user for confirmation, then if yes, uninstall SoluCheck!
 hUserPrompt = dialog('Name', 'SoluCheck Uninstallation:', 'Position', [100 100 250 125], 'Tag', 'uiUUninstallSoluCheck');
 stUExplain = uicontrol(hUserPrompt, 'Style', 'text', 'String', sprintf('Are you sure you would like to Uninstall SoluCheck? This cannot be undone!'), ...
     'Tag', 'stUExplain', 'HorizontalAlignment', 'center', 'FontSize', 10.0);
@@ -1621,7 +1630,7 @@ function pbBHelp_Callback(hObject, eventdata, handles)
 % hObject    handle to pbBHelp (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% show our help menu; basically join our string into one long line,
+% Show our help menu; basically join our string into one long line,
 % separated by \n.
 fihHelp = findobj('Tag', 'uiHHelp');
 if ~isempty(fihHelp)
@@ -1682,15 +1691,15 @@ function uiBSoluCheck_CloseRequestFcn(hObject, eventdata, handles)
 % Hint: delete(hObject) closes the figure
 fprintf('Closing SoluCheck, Please Wait...');
 
-% get the original directory:
+% Get the original directory:
 strOldDir = getappdata(findobj('Tag', 'uiBSoluCheck'), 'strOldDir');
 
-% a cell array of all possible figure tags:
+% A cell array of all possible figure tags:
 cellFigures = {'uiAAdvancedOptions', 'uiFViewArguments', 'uiPPlots', 'uiEExempt',...
     'uiDLoadDatabase', 'uiLLoadVariables', 'uiNNotifications', 'uiRMaxMin', ...
     'uiSArrSize', 'uiVViewer', 'uiHHelp', 'uiWWorkSpace', 'uiPParameters', ...
     'uiRPrefs'};
-% if we can find the figure, delete it!
+% If we can find the figure, delete it!
 for i = 1:numel(cellFigures)
     if ~isempty(findobj('Tag', cellFigures{i}))
         delete(findobj('Tag', cellFigures{i}));
@@ -1719,4 +1728,4 @@ function uiBSoluCheck_KeyPressFcn(hObject, eventdata, handles)
 %	Character: character interpretation of the key(s) that was pressed
 %	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
 % handles    structure with handles and user data (see GUIDATA)
-% basically, do NOT allow a button press to go back to the command prompt!
+% Basically, do NOT allow a button press to go back to the command prompt!

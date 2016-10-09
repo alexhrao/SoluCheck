@@ -25,9 +25,7 @@ function varargout = userPrefs(varargin)
 % Last Modified by GUIDE v2.5 09-Oct-2016 13:31:28
 
 % Begin initialization code - DO NOT EDIT
-%#ok<*DEFNU>
-%#ok<*INUSL>
-%#ok<*INUSD>
+%#ok<*DEFNU,*INUSL,*INUSD>
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...

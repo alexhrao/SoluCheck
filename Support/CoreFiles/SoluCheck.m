@@ -226,12 +226,11 @@ setappdata(findobj('Tag', 'uiBSoluCheck'), 'sFilePath', strFilePath);
 sOriginalFileName = get(handles.tbBFilePath, 'string');
 if ~isequal(strFileName, 0)
     % Write the path to our preferences:
+    cellInfo{1}{6} = strFilePath;
     fidInfo = fopen('SoluCheckInfo.txt', 'w');
-    strInfo = strjoin(cellInfo{1}, '\n');
+    strInfo = strjoin(cellInfo{1}(1:end-1), '\n');
     fprintf(fidInfo, '%s', strInfo);
-    if isempty(strDefault)
-        fprintf(fidInfo, '\n%s', strFilePath);
-    end
+    fprintf(fidInfo, '\n%s', strFilePath);
     fclose(fidInfo);
     % Tell the user that we are loading the specified file
     set(handles.stBTestResults, 'String', 'Loading...', 'ForegroundColor', 'black', 'Background', [.94 .94 .94]);
@@ -501,12 +500,11 @@ stcSwitches = getappdata(findobj('Tag', 'uiBSoluCheck'), 'stcSwitches');
 if isequal(strSolnName, 0)
     set(handles.tbBSolutionPath, 'string', 'Select your solution file...');
 else
+    cellInfo{1}{6} = strSolnPath;
     fidInfo = fopen('SoluCheckInfo.txt', 'w');
-    strInfo = strjoin(cellInfo{1}, '\n');
+    strInfo = strjoin(cellInfo{1}(1:end-1), '\n');
     fprintf(fidInfo, '%s', strInfo);
-    if isempty(strDefault)
-        fprintf(fidInfo, '\n%s', strSolnPath);
-    end
+    fprintf(fidInfo, '\n%s', strSolnPath);
     fclose(fidInfo);
     % Otherwise, set the string!
     set(handles.tbBSolutionPath, 'string', [strSolnPath strSolnName]);

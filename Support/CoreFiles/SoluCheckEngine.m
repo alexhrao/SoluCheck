@@ -132,7 +132,8 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
     end
     
     if stcSwitches.Auditing
-        fidAudit = fopen([cd '\auditFile.m'], 'w');
+        fstAudit = [strCurrentPath '\auditFile.m'];
+        fidAudit = fopen(fstAudit, 'w');
         fprintf(fidAudit, '%%%% Audit:\n%%\n%% Problem: %s\n%%\n%% TimeStamp: %s\n%%\n', strFName, datestr(datetime));
     else
         fidAudit = -1;

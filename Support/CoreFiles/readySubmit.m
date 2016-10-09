@@ -9,14 +9,12 @@ try
     fidInfo = fopen('SoluCheckInfo.txt', 'r');
     while fidInfo == -1
         userPrefs;
+        uiwait();
         fidInfo = fopen('SoluCheckInfo.txt', 'r');
     end
-    strName = fgetl(fidInfo);
-    strID = fgetl(fidInfo);
-    strEmail = fgetl(fidInfo);
-    strCID = fgetl(fidInfo);
-    strSID = fgetl(fidInfo);
+    cellInfo = textscan(fidInfo, '%s', 5, 'Whitespace', '\n');
     fclose(fidInfo);
+    [strName, strID, strEmail, strCID, strSID] = deal(cellInfo{1}{:});
     stcFiles = dir();
     cellFiles = {stcFiles.name};
     cellInd = regexp(cellFiles, 'hw\d\d\.m');

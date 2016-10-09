@@ -8,11 +8,12 @@ function varargout = SoluCheck(varargin)
 %      contact SoluCheck Services at SoluCheck@gmail.com.
 %
 % See also: AdvancedOptions, SoluCheckEngine
-if isempty(varargin)
+hSoluCheck = findall(0, 'Tag', 'uiBSoluCheck');
+if isempty(varargin) && isempty(hSoluCheck)
     fprintf('Loading SoluCheck, Please Wait...');
     [strPath, ~, ~] = fileparts(mfilename('fullpath'));
     addpath(strPath);
-    addpath([strPath(1:end-9) '\Media'], [strPath(1:end-9) '\Documentation'])
+    addpath([strPath(1:end-9) 'Media'], [strPath(1:end-9) 'Documentation'])
     varargin{1} = true;
 end
 gui_Singleton = 1;
@@ -192,47 +193,72 @@ function pbBFilePath_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Initialize starting variables:
+fidInfo = fopen('SoluCheckInfo.txt', 'r');
+if fidInfo ~= -1
+    cellInfo = textscan(fidInfo, '%s', 'Whitespace', '\n');
+    fclose(fidInfo);
+    if numel(cellInfo{1}) > 5
+        strDefault = cellInfo{1}{6};
+    else
+        strDefault = '';
+    end
+else
+    while fidInfo == -1
+        userPrefs;
+        uiwait();
+        fidInfo = fopen('SoluCheckInfo.txt', 'r');
+    end
+    cellInfo = textscan(fidInfo, '%s', 'Whitespace', '\n');
+    fclose(fidInfo);
+    strDefault = '';
+end
 bFirstTime = getappdata(findobj('Tag', 'uiBSoluCheck'), 'bFirstTime');
 hSoluCheck = findobj('Tag', 'uiBSoluCheck');
 stcSounds = getappdata(hSoluCheck, 'stcSounds');
 stcSwitches = getappdata(hSoluCheck, 'stcSwitches');
 % Get the user's file path; will return 0 if the user cancelled!
-[sFileName, sFilePath] = uigetfile('*.m');
-setappdata(findobj('Tag', 'uiBSoluCheck'), 'sFileName', sFileName);
-setappdata(findobj('Tag', 'uiBSoluCheck'), 'sFilePath', sFilePath);
+[strFileName, strFilePath] = uigetfile({'*.m', 'MATLAB Code File'}, 'Choose your code file:', strDefault);
+setappdata(findobj('Tag', 'uiBSoluCheck'), 'sFileName', strFileName);
+setappdata(findobj('Tag', 'uiBSoluCheck'), 'sFilePath', strFilePath);
 sOriginalFileName = get(handles.tbBFilePath, 'string');
-if sFilePath ~= 0
+if ~isequal(strFileName, 0)
+    % Write the path to our preferences:
+    fidInfo = fopen('SoluCheckInfo.txt', 'w');
+    strInfo = strjoin(cellInfo{1}, '\n');
+    fprintf(fidInfo, strInfo);
+    fprintf(fidInfo, '\n%s', strFilePath);
+    fclose(fidInfo);
     % Tell the user that we are loading the specified file
     set(handles.stBTestResults, 'String', 'Loading...', 'ForegroundColor', 'black', 'Background', [.94 .94 .94]);
     drawnow();
-    cd(sFilePath);
-    set(handles.stBFunctionName, 'string', sFileName);
-    set(handles.tbBFilePath, 'string', [sFilePath sFileName]);
+    cd(strFilePath);
+    set(handles.stBFunctionName, 'string', strFileName);
+    set(handles.tbBFilePath, 'string', [strFilePath strFileName]);
     % set the solution file path accordingly:
     if strcmp(get(handles.tbBSolutionPath, 'string'), 'Select your solution file...')
-        set(handles.tbBSolutionPath, 'string', [sFilePath sFileName(1:end-2) '_soln.p']);
-        set(handles.tbBSolutionPath, 'string', [sFilePath sFileName(1:end-2) '_soln.p']);
-        sSolutionPath = sFilePath;
+        set(handles.tbBSolutionPath, 'string', [strFilePath strFileName(1:end-2) '_soln.p']);
+        set(handles.tbBSolutionPath, 'string', [strFilePath strFileName(1:end-2) '_soln.p']);
+        sSolutionPath = strFilePath;
         setappdata(findobj('Tag','uiBSoluCheck'), 'sSolutionPath', sSolutionPath);
-        sSolutionName = [sFileName(1:end-2) '_soln.p'];
+        sSolutionName = [strFileName(1:end-2) '_soln.p'];
         setappdata(findobj('Tag', 'uiBSoluCheck'), 'sSolutionName', sSolutionName);
     elseif strcmp([sOriginalFileName(1:end-2) '_soln.p'], get(handles.tbBSolutionPath, 'string'))
-        set(handles.tbBSolutionPath, 'string', [sFilePath sFileName(1:end-2) '_soln.p']);
-        sSolutionPath = sFilePath;
+        set(handles.tbBSolutionPath, 'string', [strFilePath strFileName(1:end-2) '_soln.p']);
+        sSolutionPath = strFilePath;
         setappdata(findobj('Tag','uiBSoluCheck'), 'sSolutionPath', sSolutionPath);
-        sSolutionName = [sFileName(1:end-2) '_soln.p'];
+        sSolutionName = [strFileName(1:end-2) '_soln.p'];
         setappdata(findobj('Tag', 'uiBSoluCheck'), 'sSolutionName', sSolutionName);
     end
     % Provide file path to outside applications:
-    setappdata(handles.uiBSoluCheck, 'cFile', {sFilePath, sFileName});
+    setappdata(handles.uiBSoluCheck, 'cFile', {strFilePath, strFileName});
     try
         % Try to determine how many arguments; if we can't tell the
         % user to select a valid file!
-        addpath(sFilePath);
-        iNargin = nargin([sFilePath sFileName]);
+        addpath(strFilePath);
+        iNargin = nargin([strFilePath strFileName]);
         setappdata(handles.uiBSoluCheck, 'iNargin', iNargin);
     catch
-        strResult = sprintf('Loading File %s...Failed! Please select a valid function file!', sFileName);
+        strResult = sprintf('Loading File %s...Failed! Please select a valid function file!', strFileName);
         set(handles.stBTestResults, 'string', 'Please select a valid function file!', 'BackgroundColor', 'Yellow');
         if stcSwitches.Details
             hViewer = findobj('Tag', 'uiVViewer');
@@ -251,7 +277,7 @@ if sFilePath ~= 0
     end
     % Check to make sure no varargin
     if iNargin < 0
-        strResult = sprintf('Loading File %s...Failed! Please select a function that does NOT take in varargin!', sFileName);
+        strResult = sprintf('Loading File %s...Failed! Please select a function that does NOT take in varargin!', strFileName);
         set(handles.stBTestResults, 'string', 'Please select a function that does NOT take in a variable number of inputs!', 'BackgroundColor', 'Yellow');
         if stcSwitches.Details
             hViewer = findobj('Tag', 'uiVViewer');
@@ -315,7 +341,7 @@ if sFilePath ~= 0
     tbBStepSize = cell(1, iNargin);
     stBDivider = cell(1, iNargin);
     % Create the UI Controls:
-    [cellInArgs, cellOutArgs] = getArgs([sFilePath sFileName]);
+    [cellInArgs, cellOutArgs] = getArgs([strFilePath strFileName]);
     for k = 1:numel(cellInArgs)
         if strcmp(cellInArgs{k}, '~')
             cellInArgs{k} = 'Input Ignored';
@@ -358,8 +384,8 @@ if sFilePath ~= 0
     setappdata(hSoluCheck, 'stBDivider', stBDivider);
     % Tell the user that SoluCheck has been prepped and is awaiting
     % User Orders:
-    strResult = sprintf('>> Loading File %s...Loaded!', sFileName);
-    strDescription = help(sFileName);
+    strResult = sprintf('>> Loading File %s...Loaded!', strFileName);
+    strDescription = help(strFileName);
     if isempty(cellOutArgs)
         strDetails = 'This function does not output any arguments.';
     elseif numel(cellOutArgs) == 1
@@ -445,18 +471,42 @@ function pbBSolutionFilePath_Callback(hObject, eventdata, handles)
 % hObject    handle to pbBSolutionFilePath (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+fidInfo = fopen('SoluCheckInfo.txt', 'r');
+if fidInfo ~= -1
+    cellInfo = textscan(fidInfo, '%s', 'Whitespace', '\n');
+    fclose(fidInfo);
+    if numel(cellInfo{1}) > 5
+        strDefault = cellInfo{1}{6};
+    else
+        strDefault = '';
+    end
+else
+    while fidInfo == -1
+        userPrefs;
+        uiwait();
+        fidInfo = fopen('SoluCheckInfo.txt', 'r');
+    end
+    cellInfo = textscan(fidInfo, '%s');
+    fclose(fidInfo);
+    strDefault = '';
+end
 stcSwitches = getappdata(findobj('Tag', 'uiBSoluCheck'), 'stcSwitches');
 % only show p files!
-[sSolutionName, sSolutionPath] = uigetfile('*.p');
+[strSolnName, strSolnPath] = uigetfile({'*.p', 'P-Files'}, 'Select your solution file:', strDefault);
 % if ALL of them are 0, then we need to cancel
-if all(sSolutionPath == 0)
+if ~isequal(strSolnName, 0)
     set(handles.tbBSolutionPath, 'string', 'Select your solution file...');
 else
+    fidInfo = fopen('SoluCheckInfo.txt', 'w');
+    strInfo = strjoin(cellInfo{1}, '\n');
+    fprintf(fidInfo, strInfo);
+    fprintf(fidInfo, '\n%s', [strSolnPath strSolnName]);
+    fclose(fidInfo);
     % otherwise, set the string!
-    set(handles.tbBSolutionPath, 'string', [sSolutionPath sSolutionName]);
-    setappdata(findobj('Tag', 'uiBSoluCheck'), 'sSolutionPath', sSolutionPath);
-    setappdata(findobj('Tag', 'uiBSoluCheck'), 'sSolutionName', sSolutionName);
-    addpath(sSolutionPath);
+    set(handles.tbBSolutionPath, 'string', [strSolnPath strSolnName]);
+    setappdata(findobj('Tag', 'uiBSoluCheck'), 'sSolutionPath', strSolnPath);
+    setappdata(findobj('Tag', 'uiBSoluCheck'), 'sSolutionName', strSolnName);
+    addpath(strSolnPath);
     strResult = 'Loading File %s...Loaded!';
 end
 % Log this to the details pane:

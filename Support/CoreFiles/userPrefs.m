@@ -22,7 +22,7 @@ function varargout = userPrefs(varargin)
 
 % Edit the above text to modify the response to help userPrefs
 
-% Last Modified by GUIDE v2.5 17-Sep-2016 13:20:58
+% Last Modified by GUIDE v2.5 09-Oct-2016 13:31:28
 
 % Begin initialization code - DO NOT EDIT
 %#ok<*DEFNU>
@@ -61,12 +61,17 @@ handles.output = hObject;
 guidata(hObject, handles);
 
 fid = fopen('SoluCheckInfo.txt', 'r');
-stcPrefs = struct('Name', 'Name', 'Email', 'Email', 'GTID', 'GT ID', 'CID', 'Course ID', 'SID', 'Section ID');
+stcPrefs = struct('Name', 'Name', 'Email', 'Email', 'GTID', 'GT ID', 'CID', 'Course ID', 'SID', 'Section ID', 'Other', {{{}}});
 cellPrefs = fieldnames(stcPrefs);
 if fid ~= -1
-    for k = 1:5
-        stcPrefs.(cellPrefs{k}) = fgetl(fid);
+    cText = textscan(fid, '%s', 5, 'Whitespace', '\n');
+    if ~isempty(cText{1})
+        for k = 1:5
+            stcPrefs.(cellPrefs{k}) = cText{1}{k};
+        end
     end
+    cOther = textscan(fid, '%s');
+    stcPrefs.Other = cOther;
     fclose(fid);
 end
 handles.tbRName.String = stcPrefs.Name;
@@ -219,14 +224,14 @@ stcPrefs.CID = handles.tbRCID.String;
 stcPrefs.SID = handles.tbRSID.String;
 fid = fopen('SoluCheckInfo.txt', 'w');
 cellFields = fieldnames(stcPrefs);
-for k = 1:numel(cellFields)
-    if k == numel(cellFields)
-        fprintf(fid, '%s', stcPrefs.(cellFields{k}));
-    else
-        fprintf(fid, '%s\n', stcPrefs.(cellFields{k}));
-    end
+for k = 1:numel(cellFields) - 1
+    fprintf(fid, '%s\n', stcPrefs.(cellFields{k}));
 end
+cellOther = stcPrefs.Other;
+strOther = strjoin(cellOther{1}, '\n');
+fprintf(strOther);
 fclose(fid);
+uiresume();
 close(hPrefs);
 
 
@@ -241,3 +246,11 @@ function uiRPrefs_KeyPressFcn(hObject, eventdata, handles)
 if strcmp(eventdata.Key, 'escape')
     close(findobj('tag', 'uiRPrefs'));
 end
+
+
+% --- Executes during object deletion, before destroying properties.
+function uiRPrefs_DeleteFcn(hObject, eventdata, handles)
+% hObject    handle to uiRPrefs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+uiresume();

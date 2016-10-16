@@ -89,12 +89,6 @@ try
         cellLines(intSPosn+1:intEPosn-1) = [];
         cellLines = [cellLines(1:intSPosn) {'% '} cellLines(intSPosn+1:end)];
     end
-    
-    fidMaster = fopen(fstFile, 'w');
-    for k = 1:numel(cellLines)
-        fprintf(fidMaster, '%s\n', cellLines{k});
-    end
-    fclose(fidMaster);
     mkdir('HW_FilesToSubmit');
     strCurrFolder = cd;
     strPath = [strCurrFolder '\HW_FilesToSubmit'];
@@ -104,6 +98,11 @@ try
     cellPosn = num2cell(cellfun(@(c)(c(1)), cellfun(@(str)(regexp(str, '\w')), cellFiles, 'uni', false)));
     cellFiles = cellfun(@(str, pos)(str(pos:end)), cellFiles, cellPosn, 'uni', false);
     cellfun(@(str)(fCopy(str)), cellFiles, 'uni', false);
+    fidMaster = fopen(['HW_FilesToSubmit\' fstFile], 'w');
+    for k = 1:numel(cellLines)
+        fprintf(fidMaster, '%s\n', cellLines{k});
+    end
+    fclose(fidMaster);
     strStatus = 'Files Ready to Submit!';
 catch ME %#ok<NASGU>
     strStatus = 'Unable to ready files. Please select a valid folder!';

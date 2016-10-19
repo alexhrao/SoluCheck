@@ -1,5 +1,13 @@
  function [out, cellError__SystemVariable] = customWorkSpace__SystemFunction(cellFormula__SystemVariable)
-    cellFileNames__SystemVariable = getappdata(findobj('Tag', 'uiBSoluCheck'), 'cellFileNames');
+     strForm = strjoin(cellFormula__SystemVariable, '\n');
+     strForm(strForm == ' ') = [];
+     vecOut = strfind(lower(strForm), 'out=');
+    if ~isempty(vecOut)
+        vecOut = vecOut(end);
+        ind = strfind(cellFormula__SystemVariable{vecOut}, '=');
+        cellFormula__SystemVariable{vecOut} = cellFormula__SystemVariable{vecOut}(ind+1:end);
+    end
+    cellFileNames__SystemVariable = getappdata(findall(0, 'Tag', 'uiBSoluCheck'), 'cellFileNames');
     for iCounter__SystemVariable = 1:numel(cellFileNames__SystemVariable)
         try
             addpath(strjoin(cellFileNames__SystemVariable{iCounter__SystemVariable}, ''));
@@ -32,11 +40,13 @@
         % Have two outputs so that IF there is NO output we don't get a
         % false positive!
         out = eval(strjoin(cellFormula__SystemVariable, '\n'));
-    catch ME
+    catch
         try
             evalc(strjoin(cellFormula__SystemVariable, '\n'));
-        catch  %#ok<CTCH>
-            cellError__SystemVariable = {true, ME, {'Formulaic Error:', ME.identifier, ME.message}};
+            ME = struct('message', 'Variable out not assigned', 'identifier', 'SoluCheck:CustomWS:NoOutput');
+            cellError__SystemVariable = {true, ME, {'Formulaic Error: No output assigned!', ME.identifier, ME.message}};
+        catch ME
+            cellError__SystemVariable = {true, ME, {'Formulaic Error!', ME.identifier, ME.message}};
         end
     end
 end

@@ -231,7 +231,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                 logPassed = false;
                 if stcSwitches.Details
                     intIterationNumber = intIterationNumber + 1;
-                    cViewer{intIterationNumber, 1} = sprintf('>> Iteration %d: Argument #%d: Formulaic Error!', intIterationNumber, i);
+                    cViewer{intIterationNumber, 1} = sprintf('>> Iteration %d: Argument #%d: %s', intIterationNumber, i, cellError{3}{1});
                     cellTemp = cell(1, intOldLines + intIterationNumber);
                     for j = 1:intOldLines
                         cellTemp{j} = strOld(j, :);
@@ -243,7 +243,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                     cellViewer((intErrorLines+1):end) = cellTemp;
                     set(hViewer.tbVViewBox, 'String', strjoin(cellViewer, '\n'));
                 end
-                strError = sprintf('Argument #%d: Formulaic Error!', i);
+                strError = sprintf('Argument #%d: %s', i, cellError{3}{1});
                 return
             else
                 cellArgs{i} = varArg;

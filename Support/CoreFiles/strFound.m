@@ -1,7 +1,7 @@
-function logFound = strFound(varStr, varPattern, logAnd, logGoal)
+function logFound = strFound(varStr, varPattern, logAnd, logGoal, intNum)
 % STRFOUND Find patterns in strings.
 %
-%   F = strFound(STRING, PATTERN, COMPARISON, GOAL);
+%   F = strFound(STRING, PATTERN, COMPARISON, GOAL, NUM);
 %   Given STRING and PATTERN, strFound will return a logical of whether the
 %   PATTERN was found within STRING.
 %
@@ -18,14 +18,17 @@ function logFound = strFound(varStr, varPattern, logAnd, logGoal)
 %
 %   If COMPARISON is present and true, then strFound will return true only
 %   if ALL of the patterns are found within the string. If COMPARISON is
-%   not present, then the ANY operator is assumed.
+%   not present or COMPARISON is empty, then the ANY operator is assumed.
 %
 %   If GOAL is present and false, then strFound will return a logical array
 %   that is the same number of elements as PATTERN is. Each element will be
 %   a logical as to whether that pattern was found AT LEAST once within the
-%   given set of strings. If GOAL is true, strFound will instead act as if
-%   just given STRING and PATTERN. If GOAL is present, this supersedes
-%   COMPARISON.
+%   given set of strings. If GOAL is true or empty, strFound will instead 
+%   act as if just given STRING and PATTERN. If GOAL is present, this 
+%   supersedes COMPARISON.
+%
+%   If NUM is present, strFound will only give out NUM true values;
+%   Otherwise, if ONE is empty, then all true values are given.
 %
 %   strFound is case-sensitive, and only accepts strings or cell arrays of
 %   strings as its first two arguments. In addition, the last two arguments
@@ -67,16 +70,23 @@ function logFound = strFound(varStr, varPattern, logAnd, logGoal)
     if ischar(varPattern)
         varPattern = {varPattern};
     end
-    if ~exist('logAnd', 'var')
+    if ~exist('logAnd', 'var') || isempty(logAnd)
         logAnd = false;
     end
-    if ~exist('logGoal', 'var')
+    if ~exist('logGoal', 'var') || isempty(logGoal)
         logGoal = true;
+    end
+    if ~exist('intNum', 'var') || isempty(intNum)
+        intNum = Inf;
     end
     if logGoal
         logFound = cellfun(@(str)(strfind2(str, varPattern, logAnd)), varStr);
     else
         logFound = cellfun(@(str)(any(strFound(varStr, str, logAnd))), varPattern);
+    end
+    if intNum
+        indNum = find(logFound, intNum);
+        logFound(indNum+1:end) = false;
     end
 end
 

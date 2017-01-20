@@ -584,6 +584,7 @@ stcSounds = getappdata(findobj('Tag', 'uiBSoluCheck'), 'stcSounds');
 bError = false;
 % Set the strings to say that we have commenced testing:
 set(handles.pbBCancel, 'String', 'Cancel');
+set(handles.pbBTest, 'Enable', 'off', 'String', 'Testing...');
 set(handles.stBTestResults, 'String', 'Please Wait - Testing...', 'BackgroundColor', 'blue', 'ForegroundColor', 'white'); 
 % Allow the UI to reload
 drawnow();
@@ -947,6 +948,7 @@ end
 fprintf(' Analyzed!\n');
 % Tell the user that we are completely done!
 set(handles.pbBCancel, 'String', 'Done');
+set(handles.pbBTest, 'String', 'Test Function', 'Enable', 'on');
 
 function pbBTest_KeyPressFcn(hObject, eventdata, handles)
 % Run the Test Module for key presses

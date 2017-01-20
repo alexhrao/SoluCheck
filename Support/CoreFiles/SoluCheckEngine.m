@@ -616,7 +616,7 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
             end
         end
         if intIterationNumber < intIterations
-            cellArgs = cellCounter;
+            % cellArgs = cellCounter;
             % Reload our Arguments:
             for i = 1:intArgs
                 if stcSwitches.LoadDatabase
@@ -685,14 +685,14 @@ function [logPassed, strError, intIterationNumber, cellArgs, cellAnswers, cellSo
                         % resetting outside ranged values to be inside
                         % our range!
                         if stcSwitches.MaxMin
-                            if ~any(any(varTest > cellRanges{i}(2) | varTest < cellRanges{i}(1)))
-                                cellArgs{i} = cellArgs{i} + cellSteps{i};
-                            else
-                                cellArgs{i}(cellArgs{i} == cellRanges{i}(2)) = cellRanges{i}(1);
+                            if any(varTest > cellRanges{i}(2))
+                                cellArgs{i}(cellArgs{i} == cellRanges{i}(2)) = cellRanges{i}(1) - cellSteps{i};
                             end
-                        else
-                            cellArgs{i} = cellArgs{i} + cellSteps{i};
+                            if any(varTest < cellRanges{i}(1))
+                                cellArgs{i}(cellArgs{i} == cellRanges{i}(1)) = cellRanges{i}(2) - cellSteps{i};
+                            end
                         end
+                        cellArgs{i} = cellArgs{i} + cellSteps{i};
                         % If we have exempt values, then deal with
                         % these accordingly!
                         if stcSwitches.Exempt

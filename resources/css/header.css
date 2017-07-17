@@ -322,18 +322,6 @@ a:hover,
 .projects p {
     text-indent: 20px;
 }
-.sectionHeader {
-    cursor: pointer;
-}
-.sectionHeader:after {
-    font-family: "Glyphicons Halflings";
-    font-size: 15px;
-    content: "\e114";
-}
-.sectionHeader.collapsed:after {
-    content: "\e080";
-    
-}
 .social-icons i {
     margin: 1.5%;
     font-size: 48px;

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="google-site-verification" content="U0YbbGbaPntfo6sI1FvCUkRI1URGu1yRL9Avi9HParg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sudoku Online</title>
+    <link rel="shortcut icon" type="application/ico" href="resources/images/branding/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.css" />
+    <link rel="stylesheet" type="text/css" href="resources/css/header.css" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.4/summernote.js"></script>
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script type="text/javascript" src='https://www.google.com/recaptcha/api.js'></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.typeit/4.4.0/typeit.min.js"></script>
+    <script type="text/javascript" src="resources/scripts/onReady.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-fixed-top">
+        <div class="container-fluid navbar-inverse">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menuBar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                <a id="logo" href="https://alexhrao.github.io" class="navbar-left">
+                    &nbsp;
+                    <img id="logoImage" class="img-circle" src="resources/images/branding/logo.png" height="50px"/>
+                    <div id="logoName" class="navbar-brand">
+                        Alexander Rao
+                    </div>
+                </a>
+            </div>
+            <div id="menuBar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav visible-xs">
+                    <li><a href="https://alexhrao.github.io/Sudoku/">Sudoku Online</a></li>
+                    <li><a href="https://alexhrao.github.io/MealPlanner/">Meal Planner</a></li>
+                    <li><a href="https://alexhrao.github.io/SoluCheck/">SoluCheck</a></li>
+                    <li><a href="https://alexhrao.github.io/Chess/">Chess</a></li>
+                    <li><a href="https://alexhrao.github.io/VariableLoader/">Variable Loader</a></li>
+                </ul>
+                <ul class="nav navbar-nav hidden-xs">
+                    <li><a href="https://alexhrao.github.io/Sudoku/">Sudoku Online</a></li>
+                    <li><a href="https://alexhrao.github.io/MealPlanner/">Meal Planner</a></li>
+                    <li><a href="https://alexhrao.github.io/SoluCheck/">SoluCheck</a></li>
+                    <li><a href="https://alexhrao.github.io/Chess/">Chess</a></li>
+                    <li><a href="https://alexhrao.github.io/VariableLoader/">Variable Loader</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="projects" class="container-fluid">
+        <div class="row projects content">
+            <div class="col-sm-12">
+                <div class="tab-content">
+                    <div id="sudokuOnline" class="tab-pane fade in active">
+                        <div class="text-center">
+                            <img id="sudokuOnlineLogo" src="resources/images/projects/sudokuOnline.png" class="img-responsive" />
+                        </div>
+                        <div class="col-xs-12 text-center">
+                            <h5>Looking for the API documentation? Click <a href="#">here</a> to see it!</h5>
+                            <h3>
+                                Sudoku Online is the world's first (and probably only) cross-platform Desktop application that supports networked multiplayer. While there are many features, here are the notable ones:<br><br>
+                            </h3>
+                            <div class="col-xs-12 text-left">
+                                <ul>
+                                    <li>Play classic Sudoku, with Notes, Hints, etc.</li>
+                                    <li>Play online with as many players as you wish</li>
+                                    <li>Drop-In/Drop-Out play style means players can join and leave when they wish</li>
+                                    <li>Board generation means player's can ask the game for a random board or upload their own</li>
+                                    <li>In-Game chat means players can constantly stay connected, and even chat after the game is over</li>
+                                    <li>Cross platform - All the platform needs is a screen and the Java Runtime Environment (JRE)</li>
+                                    <li>Automatically scales the window to fit any device</li>
+                                    <li>Has native binaries for Windows and macOS</li>
+                                </ul>
+                            </div>
+                            <p>
+                                Sudoku Online was a labor of love. It was originally made so that a certain young lady and I could keep in touch while I studied abroad, but I'm happy to report that it's been used even outside of this context. This project was born out a "I wonder if
+                                this is even possible..." thought. I have, of course, since found out that <em>it is indeed possible</em>.
+                            </p>
+                            <p>
+                                Writing this application actually taught me quite a bit about the Java Programming Language and how modern networking works. Ideas like sockets, servers, and streams were introduced to me for the very first time. Multithreaded programming became second
+                                nature. Overall, I actually learned more creating this than I learned in my classes!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Social -->
+</body>
+
+</html>
